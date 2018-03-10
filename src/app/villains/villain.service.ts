@@ -11,17 +11,7 @@ const api = '/api';
 export class VillainService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  getVillain(id: number) {
-    return this.http
-      .get<Array<Villain>>(`${api}/villains/${id}`)
-      .pipe(
-        map(villain => villain),
-        tap(() => this.toastService.openSnackBar('Villain retrieved successfully!', 'GET')),
-        catchError(this.handleError)
-      );
-  }
-
-  getVillains() {
+  getAll() {
     return this.http
       .get<Array<Villain>>(`${api}/villains`)
       .pipe(
@@ -36,19 +26,19 @@ export class VillainService {
     return Observable.throw(res.error || 'Server error');
   }
 
-  deleteVillain(villain: Villain) {
+  delete(id: number) {
     return this.http
-      .delete(`${api}/villain/${villain.id}`)
-      .pipe(tap(() => this.toastService.openSnackBar(`Villain ${villain.name} deleted`, 'DELETE')));
+      .delete(`${api}/villain/${id}`)
+      .pipe(tap(() => this.toastService.openSnackBar(`Villain ${id} deleted`, 'DELETE')));
   }
 
-  addVillain(villain: Villain) {
+  add(villain: Villain) {
     return this.http
       .post<Villain>(`${api}/villain/`, villain)
       .pipe(tap(() => this.toastService.openSnackBar(`Villain ${villain.name} added`, 'POST')));
   }
 
-  updateVillain(villain: Villain) {
+  update(villain: Villain) {
     return this.http
       .put<Villain>(`${api}/villain/${villain.id}`, villain)
       .pipe(tap(() => this.toastService.openSnackBar(`Villain ${villain.name} updated`, 'PUT')));

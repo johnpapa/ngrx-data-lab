@@ -31,7 +31,7 @@ export class VillainsComponent implements OnInit {
     this.loading = true;
     this.unselect();
     this.villainService
-      .deleteVillain(villain)
+      .delete(villain.id)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(() => (this.villains = this.villains.filter(h => h.id !== villain.id)));
   }
@@ -44,7 +44,7 @@ export class VillainsComponent implements OnInit {
   getVillains() {
     this.loading = true;
     this.villainService
-      .getVillains()
+      .getAll()
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(villains => (this.villains = villains));
     this.unselect();
@@ -58,7 +58,7 @@ export class VillainsComponent implements OnInit {
   update(villain: Villain) {
     this.loading = true;
     this.villainService
-      .updateVillain(villain)
+      .update(villain)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(
         () => (this.villains = this.villains.map(h => (h.id === villain.id ? villain : h)))
@@ -68,7 +68,7 @@ export class VillainsComponent implements OnInit {
   add(villain: Villain) {
     this.loading = true;
     this.villainService
-      .addVillain(villain)
+      .add(villain)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(addedvillain => (this.villains = this.villains.concat(addedvillain)));
   }
