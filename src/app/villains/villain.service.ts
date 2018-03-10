@@ -11,14 +11,6 @@ const api = '/api';
 export class VillainService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  logout() {
-    return this.http.get(`${api}/logout`);
-  }
-
-  getProfile() {
-    return this.http.get<any>(`${api}/profile`);
-  }
-
   getVillain(id: number) {
     return this.http
       .get<Array<Villain>>(`${api}/villains/${id}`)

@@ -11,15 +11,7 @@ const api = '/api';
 export class HeroService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  logout() {
-    return this.http.get(`${api}/logout`);
-  }
-
-  getProfile() {
-    return this.http.get<any>(`${api}/profile`);
-  }
-
-  getHeroes() {
+  getAll() {
     return this.http
       .get<Array<Hero>>(`${api}/heroes`)
       .pipe(
@@ -34,19 +26,19 @@ export class HeroService {
     return Observable.throw(res.error || 'Server error');
   }
 
-  deleteHero(hero: Hero) {
+  delete(id: number) {
     return this.http
-      .delete(`${api}/hero/${hero.id}`)
-      .pipe(tap(() => this.toastService.openSnackBar(`Hero ${hero.name} deleted`, 'DELETE')));
+      .delete(`${api}/hero/${id}`)
+      .pipe(tap(() => this.toastService.openSnackBar(`Hero ${id} deleted`, 'DELETE')));
   }
 
-  addHero(hero: Hero) {
+  add(hero: Hero) {
     return this.http
       .post<Hero>(`${api}/hero/`, hero)
       .pipe(tap(() => this.toastService.openSnackBar(`Hero ${hero.name} added`, 'POST')));
   }
 
-  updateHero(hero: Hero) {
+  update(hero: Hero) {
     return this.http
       .put<Hero>(`${api}/hero/${hero.id}`, hero)
       .pipe(tap(() => this.toastService.openSnackBar(`Hero ${hero.name} updated`, 'PUT')));
