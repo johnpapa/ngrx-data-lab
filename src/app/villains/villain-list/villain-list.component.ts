@@ -1,27 +1,27 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
-import { Villain } from '../../core';
+import { Villain, MasterDetailCommands } from '../../core';
 
 @Component({
   selector: 'app-villain-list',
   templateUrl: './villain-list.component.html',
-  styleUrls: ['./villain-list.component.scss']
+  styleUrls: ['./villain-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VillainListComponent {
   @Input() villains: Villain[];
   @Input() selectedVillain: Villain;
-  @Output() deleted = new EventEmitter<Villain>();
-  @Output() selected = new EventEmitter<Villain>();
+  @Input() commands: MasterDetailCommands<Villain>;
 
   byId(villain: Villain) {
     return villain.id;
   }
 
   onSelect(villain: Villain) {
-    this.selected.emit(villain);
+    this.commands.select(villain);
   }
 
   deleteVillain(villain: Villain) {
-    this.deleted.emit(villain);
+    this.commands.delete(villain);
   }
 }
