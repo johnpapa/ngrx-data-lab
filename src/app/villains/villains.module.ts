@@ -19,9 +19,12 @@ import { MaterialModule } from '../material/material.module';
   imports: [CommonModule, SharedModule, MaterialModule, VillainsRoutingModule],
   exports: [VillainsComponent, VillainDetailComponent],
   declarations: [
-    VillainsComponent, VillainsReactiveComponent,
-    VillainDetailComponent, VillainReactiveDetailComponent,
-    VillainListComponent, VillainReactiveListComponent
+    VillainsComponent,
+    VillainsReactiveComponent,
+    VillainDetailComponent,
+    VillainReactiveDetailComponent,
+    VillainListComponent,
+    VillainReactiveListComponent
   ],
   providers: [VillainService, VillainReactiveService]
 })

@@ -10,7 +10,8 @@ import { VillainReactiveService } from '../villain-reactive.service';
   templateUrl: './villains-reactive.component.html',
   styleUrls: ['./villains.component.scss']
 })
-export class VillainsReactiveComponent implements MasterDetailCommands<Villain>, OnInit {
+export class VillainsReactiveComponent
+  implements MasterDetailCommands<Villain>, OnInit {
   selected: Villain;
   commands = this;
 
@@ -31,9 +32,8 @@ export class VillainsReactiveComponent implements MasterDetailCommands<Villain>,
   }
 
   enableAddMode() {
-    this.selected = <any> {};
+    this.selected = <any>{};
   }
-
 
   getVillains() {
     this.villainService.getAll();
