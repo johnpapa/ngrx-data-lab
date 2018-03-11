@@ -5,6 +5,10 @@ import { VillainsRoutingModule } from './villains-routing.module';
 import { VillainDetailComponent } from './villain-detail/villain-detail.component';
 import { VillainsComponent } from './villains/villains.component';
 import { VillainListComponent } from './villain-list/villain-list.component';
+
+import { VillainsReactiveComponent } from './villains/villains-reactive.component';
+import { VillainReactiveService } from './villain-reactive.service';
+
 import { VillainService } from './villain.service';
 import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../material/material.module';
@@ -14,9 +18,10 @@ import { MaterialModule } from '../material/material.module';
   exports: [VillainsComponent, VillainDetailComponent],
   declarations: [
     VillainsComponent,
+    VillainsReactiveComponent,
     VillainDetailComponent,
     VillainListComponent
   ],
-  providers: [VillainService]
+  providers: [VillainService, VillainReactiveService]
 })
 export class VillainsModule {}
