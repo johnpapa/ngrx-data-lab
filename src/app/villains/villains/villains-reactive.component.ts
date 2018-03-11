@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 
-import { Villain } from '../../core';
+import { MasterDetailCommands, Villain } from '../../core';
 import { VillainReactiveService } from '../villain-reactive.service';
 
 @Component({
@@ -10,8 +10,9 @@ import { VillainReactiveService } from '../villain-reactive.service';
   templateUrl: './villains-reactive.component.html',
   styleUrls: ['./villains.component.scss']
 })
-export class VillainsReactiveComponent implements OnInit {
-  selectedVillain: Villain;
+export class VillainsReactiveComponent implements MasterDetailCommands<Villain>, OnInit {
+  selected: Villain;
+  commands = this;
 
   villains$: Observable<Villain[]>;
   loading$: Observable<boolean>;
@@ -25,13 +26,14 @@ export class VillainsReactiveComponent implements OnInit {
     this.getVillains();
   }
 
-  clear() {
-    this.selectedVillain = null;
+  close() {
+    this.selected = null;
   }
 
   enableAddMode() {
-    this.selectedVillain = <any> {};
+    this.selected = <any> {};
   }
+
 
   getVillains() {
     this.villainService.getAll();
@@ -41,7 +43,7 @@ export class VillainsReactiveComponent implements OnInit {
     this.villainService.add(villain);
   }
 
-  deleteVillain(villain: Villain) {
+  delete(villain: Villain) {
     this.villainService.delete(villain.id);
   }
 
@@ -49,11 +51,11 @@ export class VillainsReactiveComponent implements OnInit {
     this.villainService.update(villain);
   }
 
-  onSelect(villain: Villain) {
-    this.selectedVillain = villain;
+  select(villain: Villain) {
+    this.selected = villain;
   }
 
   unselect() {
-    this.selectedVillain = null;
+    this.selected = null;
   }
 }
