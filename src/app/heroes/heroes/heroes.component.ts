@@ -1,78 +1,61 @@
-import { Component, OnInit } from '@angular/core';
-import { finalize } from 'rxjs/operators';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { Hero } from '../../core';
+import { Observable } from 'rxjs/Observable';
+
+import { MasterDetailCommands, Hero } from '../../core';
 import { HeroService } from '../hero.service';
 
 @Component({
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
-  styleUrls: ['./heroes.component.scss']
+  styleUrls: ['./heroes.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeroesComponent implements OnInit {
-  addingHero = false;
-  selectedHero: Hero;
+export class HeroesComponent implements MasterDetailCommands<Hero>, OnInit {
+  selected: Hero;
+  commands = this;
 
-  heroes: Hero[];
-  loading: boolean;
+  heroes$: Observable<Hero[]>;
+  loading$: Observable<boolean>;
 
-  constructor(private heroService: HeroService) {}
+  constructor(private heroService: HeroService) {
+    this.heroes$ = heroService.heroes$;
+    this.loading$ = heroService.loading$;
+  }
 
   ngOnInit() {
     this.getHeroes();
   }
 
-  clear() {
-    this.addingHero = false;
-    this.selectedHero = null;
-  }
-
-  deleteHero(hero: Hero) {
-    this.loading = true;
-    this.unselect();
-    this.heroService
-      .delete(hero.id)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(() => (this.heroes = this.heroes.filter(h => h.id !== hero.id)));
+  close() {
+    this.selected = null;
   }
 
   enableAddMode() {
-    this.addingHero = true;
-    this.selectedHero = null;
+    this.selected = <any>{};
   }
 
   getHeroes() {
-    this.loading = true;
-    this.heroService
-      .getAll()
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(heroes => (this.heroes = heroes));
-    this.unselect();
-  }
-
-  onSelect(hero: Hero) {
-    this.addingHero = false;
-    this.selectedHero = hero;
-  }
-
-  update(hero: Hero) {
-    this.loading = true;
-    this.heroService
-      .update(hero)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(() => (this.heroes = this.heroes.map(h => (h.id === hero.id ? hero : h))));
+    this.heroService.getAll();
   }
 
   add(hero: Hero) {
-    this.loading = true;
-    this.heroService
-      .add(hero)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(addedHero => (this.heroes = this.heroes.concat(addedHero)));
+    this.heroService.add(hero);
+  }
+
+  delete(hero: Hero) {
+    this.heroService.delete(hero.id);
+  }
+
+  update(hero: Hero) {
+    this.heroService.update(hero);
+  }
+
+  select(hero: Hero) {
+    this.selected = hero;
   }
 
   unselect() {
-    this.addingHero = false;
-    this.selectedHero = null;
+    this.selected = null;
   }
 }

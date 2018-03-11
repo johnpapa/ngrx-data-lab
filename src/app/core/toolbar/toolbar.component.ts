@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
 })
 export class ToolbarComponent {
   labTitle = 'ngrx-data-lab';
-  labState = 'traditional services, with zero ngrx';
+  labState = 'traditional reactive services, with zero ngrx';
 }
