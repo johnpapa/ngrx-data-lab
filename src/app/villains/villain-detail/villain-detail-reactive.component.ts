@@ -9,19 +9,18 @@ import {
   SimpleChanges
 } from '@angular/core';
 
-import { Villain } from '../../core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 
+import { MasterDetailCommands, Villain } from '../../core';
+
 @Component({
-  selector: 'app-villain-detail',
+  selector: 'app-villain-reactive-detail',
   templateUrl: './villain-detail.component.html',
   styleUrls: ['./villain-detail.component.scss']
 })
-export class VillainDetailComponent implements OnChanges {
+export class VillainReactiveDetailComponent implements OnChanges {
   @Input() villain: Villain;
-  @Output() unselect = new EventEmitter<string>();
-  @Output() add = new EventEmitter<Villain>();
-  @Output() update = new EventEmitter<Villain>();
+  @Input() commands: MasterDetailCommands<Villain>;
 
   @ViewChild('name') nameElement: ElementRef;
 
@@ -49,13 +48,13 @@ export class VillainDetailComponent implements OnChanges {
   addVillain(form: FormGroup) {
     const { value, valid, touched } = form;
     if (touched && valid) {
-      this.add.emit({ ...this.villain, ...value });
+      this.commands.add({ ...this.villain, ...value });
     }
     this.close();
   }
 
   close() {
-    this.unselect.emit();
+    this.commands.close();
   }
 
   saveVillain(form: FormGroup) {
@@ -73,7 +72,7 @@ export class VillainDetailComponent implements OnChanges {
   updateVillain(form: FormGroup) {
     const { value, valid, touched } = form;
     if (touched && valid) {
-      this.update.emit({ ...this.villain, ...value });
+      this.commands.update({ ...this.villain, ...value });
     }
     this.close();
   }
