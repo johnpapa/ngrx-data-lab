@@ -8,6 +8,4 @@ export class HeroService extends ReactiveDataService<Hero> {
   constructor(http: HttpClient, toastService: ToastService) {
     super('Hero', http, toastService, 'heroes');
   }
-
-  heroes$ = this.entities$;
 }

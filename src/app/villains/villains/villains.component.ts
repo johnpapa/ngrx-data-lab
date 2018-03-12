@@ -20,7 +20,7 @@ export class VillainsComponent
   loading$: Observable<boolean>;
 
   constructor(private villainService: VillainService) {
-    this.villains$ = villainService.villains$;
+    this.villains$ = villainService.entities$;
     this.loading$ = villainService.loading$;
   }
 

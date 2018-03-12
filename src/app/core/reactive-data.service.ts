@@ -21,7 +21,7 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
   private entitiesSubject = new BehaviorSubject<T[]>([]);
 
   /** Observable of cached entities */
-  protected entities$ = this.entitiesSubject.asObservable();
+  public entities$ = this.entitiesSubject.asObservable();
 
   protected errorsSubject = new Subject<string>();
 

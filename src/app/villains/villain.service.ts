@@ -8,6 +8,4 @@ export class VillainService extends ReactiveDataService<Villain> {
   constructor(http: HttpClient, toastService: ToastService) {
     super('Villain', http, toastService);
   }
-
-  villains$ = this.entities$;
 }
