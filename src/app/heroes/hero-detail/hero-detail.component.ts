@@ -48,7 +48,7 @@ export class HeroDetailComponent implements OnChanges {
   }
 
   saveHero() {
-    const {dirty, valid, value } = this.form;
+    const { dirty, valid, value } = this.form;
     if (dirty && valid) {
       const newHero = { ...this.hero, ...value };
       this.addMode ? this.commands.add(newHero) : this.commands.update(newHero);

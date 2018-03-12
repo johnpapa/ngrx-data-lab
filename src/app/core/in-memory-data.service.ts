@@ -48,8 +48,10 @@ export class InMemoryDataService {
    * All collections in this db have numeric ids.
    * Seed grows by highest id seen in any of the collections.
    */
-  genId(collection: {id: number}[], collectionName: string) {
-    this.maxId = 1 + collection.reduce((prev, cur) => Math.max(prev, cur.id || 0), this.maxId);
+  genId(collection: { id: number }[], collectionName: string) {
+    this.maxId =
+      1 +
+      collection.reduce((prev, cur) => Math.max(prev, cur.id || 0), this.maxId);
     return this.maxId;
   }
 

@@ -48,10 +48,12 @@ export class VillainDetailComponent implements OnChanges {
   }
 
   saveVillain() {
-    const { dirty, valid, value} = this.form;
+    const { dirty, valid, value } = this.form;
     if (dirty && valid) {
       const newVillain = { ...this.villain, ...value };
-      this.addMode ? this.commands.add(newVillain) : this.commands.update(newVillain);
+      this.addMode
+        ? this.commands.add(newVillain)
+        : this.commands.update(newVillain);
     }
     this.close();
   }
