@@ -19,7 +19,7 @@ export class HeroesComponent implements MasterDetailCommands<Hero>, OnInit {
   loading$: Observable<boolean>;
 
   constructor(private heroService: HeroService) {
-    this.heroes$ = heroService.heroes$;
+    this.heroes$ = heroService.entities$;
     this.loading$ = heroService.loading$;
   }
 
