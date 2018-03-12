@@ -43,33 +43,20 @@ export class HeroDetailComponent implements OnChanges {
     }
   }
 
-  addHero(form: FormGroup) {
-    const { value, valid, touched } = form;
-    if (touched && valid) {
-      this.commands.add({ ...this.hero, ...value });
-    }
-    this.close();
-  }
-
   close() {
     this.commands.close();
   }
 
-  saveHero(form: FormGroup) {
-    if (this.addMode) {
-      this.addHero(form);
-    } else {
-      this.updateHero(form);
+  saveHero() {
+    const {dirty, valid, value } = this.form;
+    if (dirty && valid) {
+      const newHero = { ...this.hero, ...value };
+      this.addMode ? this.commands.add(newHero) : this.commands.update(newHero);
     }
+    this.close();
   }
 
   setFocus() {
     this.nameElement.nativeElement.focus();
-  }
-
-  updateHero(form: FormGroup) {
-    const { value, valid, touched } = form;
-    this.commands.update({ ...this.hero, ...value });
-    this.close();
   }
 }
