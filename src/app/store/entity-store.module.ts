@@ -1,6 +1,12 @@
 import { NgModule } from '@angular/core';
-import { NgrxDataModule } from 'ngrx-data';
-import { pluralNames, entityMetadata } from './entity-metadata';
+import { EntityMetadataMap, NgrxDataModule } from 'ngrx-data';
+
+export const entityMetadata: EntityMetadataMap = {
+  Hero: {},
+  Villain: {}
+};
+
+export const pluralNames = { Hero: 'Heroes' };
 
 @NgModule({
   imports: [

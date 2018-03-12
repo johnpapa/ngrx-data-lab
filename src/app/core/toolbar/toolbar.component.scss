@@ -84,6 +84,6 @@ a {
 .row-commands {
   height: 40px;
   border-top: 1px solid white;
-  // @include primary-background-contrast-color; // end
-  @include accent-background-color; // begin
+  @include primary-background-contrast-color; // end
+  // @include accent-background-color; // begin
 }
