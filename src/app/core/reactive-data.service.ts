@@ -74,12 +74,13 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
   }
 
   update(entity: T) {
-    const id = entity.id;
     this.http
-      .put<T>(`${api}/${this.entityResource}/${id}`, entity)
+      .put<T>(`${api}/${this.entityResource}/${entity.id}`, entity)
       .subscribe(updatedEntity => {
         this.next(
-          this.entities.map(e => (e.id === id ? updatedEntity || entity : e))
+          this.entities.map(
+            e => (e.id === entity.id ? updatedEntity || entity : e)
+          )
         );
         this.log(`${this.entityName} updated.`, 'PUT');
       }, this.handleError('Update', 'PUT'));

@@ -3,7 +3,6 @@ import {
   Input,
   ElementRef,
   OnChanges,
-  Output,
   ViewChild,
   SimpleChanges,
   ChangeDetectionStrategy
@@ -44,33 +43,22 @@ export class VillainDetailComponent implements OnChanges {
     }
   }
 
-  addVillain(form: FormGroup) {
-    const { value, valid, touched } = form;
-    if (touched && valid) {
-      this.commands.add({ ...this.villain, ...value });
-    }
-    this.close();
-  }
-
   close() {
     this.commands.close();
   }
 
-  saveVillain(form: FormGroup) {
-    if (this.addMode) {
-      this.addVillain(form);
-    } else {
-      this.updateVillain(form);
+  saveVillain() {
+    const { dirty, valid, value } = this.form;
+    if (dirty && valid) {
+      const newVillain = { ...this.villain, ...value };
+      this.addMode
+        ? this.commands.add(newVillain)
+        : this.commands.update(newVillain);
     }
+    this.close();
   }
 
   setFocus() {
     this.nameElement.nativeElement.focus();
-  }
-
-  updateVillain(form: FormGroup) {
-    const { value, valid, touched } = form;
-    this.commands.update({ ...this.villain, ...value });
-    this.close();
   }
 }
