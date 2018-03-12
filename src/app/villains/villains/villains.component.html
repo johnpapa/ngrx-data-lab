@@ -1,7 +1,7 @@
 <div class="control-panel">
   <div class="button-panel">
     <button mat-raised-button color="primary" type="button" (click)="getVillains()" matTooltip="Refresh the villains">Refresh</button>
-    <button mat-raised-button color="primary" type="button" (click)="enableAddMode()" *ngIf="!addingVillain && !selectedVillain"
+    <button mat-raised-button color="primary" type="button" (click)="enableAddMode()" *ngIf="!selected"
       matTooltip="Add a new villain">Add</button>
   </div>
 </div>

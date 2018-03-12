@@ -9,9 +9,9 @@
           matTooltip="Delete the villain">
           <mat-icon>delete</mat-icon>
         </button>
-        <div class="selectable-item" [class.selected]="villain === selectedVillain">
+        <div class="selectable-item" [class.selected]="villain === selectedVillain" (click)="onSelect(villain)">
           <div class="badge">{{villain.id}}</div>
-          <div class="item-text" (click)="onSelect(villain)">
+          <div class="item-text">
             <div class="name">{{villain.name}}</div>
             <div class="saying">{{villain.saying}}</div>
           </div>
