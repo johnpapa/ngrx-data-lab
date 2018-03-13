@@ -1,5 +1,14 @@
 import { browser, by, element } from 'protractor';
 
+by.addLocator(
+  'formControlName',
+  (value, opt_parentElement, opt_rootSelector) => {
+    const using = opt_parentElement || document;
+
+    return using.querySelectorAll(`[formControlName="${value}"]`);
+  }
+);
+
 export class AppPage {
   navigateToHeroes() {
     return browser.get('/heroes');
@@ -26,9 +35,15 @@ export class AppPage {
   }
 
   getDetailNameInputValue() {
-    return this.getDetail()
-      .element(by.css('input[formcontrolname="name"]'))
-      .getAttribute('value');
+    return (
+      this.getDetailNameInput()
+        // .element(by.css('input[formcontrolname="name"]'))
+        .getAttribute('value')
+    );
+  }
+
+  getDetailNameInput() {
+    return this.getDetail().element(by.formControlName('name'));
   }
 
   getDetailTitle() {
@@ -64,5 +79,27 @@ export class AppPage {
       nameElement,
       name
     };
+  }
+
+  async closeDetails() {
+    const cancelButton = await this.getDetail().element(
+      by.cssContainingText('button', 'Cancel')
+    );
+    await cancelButton.click();
+    return true;
+  }
+
+  async saveDetails() {
+    const saveButton = await this.getDetail().element(
+      by.cssContainingText('button', 'Save')
+    );
+    await saveButton.click();
+    return true;
+  }
+
+  async changeDetailsName(newValue: string) {
+    const name = await this.getDetailNameInput();
+    name.sendKeys(newValue);
+    return newValue;
   }
 }
