@@ -5,15 +5,11 @@ import { browser, by, element } from 'protractor';
 describe('ngrx-data-lab App', () => {
   let page: AppPage;
 
-  beforeEach(() => {
-    page = new AppPage();
-  });
+  beforeEach(() => (page = new AppPage()));
 
   describe('Heroes', () => {
     const entityName = 'heroes';
-    beforeEach(async () => {
-      await page.navigateToHeroes();
-    });
+    beforeEach(async () => await page.navigateToHeroes());
     runNavigationTests(entityName);
   });
 
