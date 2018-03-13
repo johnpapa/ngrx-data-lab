@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
 
 import { MasterDetailCommands, Hero } from '../../core';
