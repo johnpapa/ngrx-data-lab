@@ -38,20 +38,41 @@ describe('ngrx-data-lab App', () => {
       expect(page.getListItems().count()).toBeGreaterThan(0);
     });
 
-    it(`should open detail when item is selected`, () => {
+    describe('when selecting an item from list', () => {
+      it(`should open detail`, () => {
+        const { namePromise } = selectFirstItemInList();
+        namePromise.then(name =>
+          expect(page.getDetailTitle().getText()).toMatch('Details')
+        );
+      });
+
+      it(`should have matching name in selected list and detail item`, () => {
+        const { namePromise } = selectFirstItemInList();
+        namePromise.then(name =>
+          expect(page.getDetailNameInputValue()).toMatch(name)
+        );
+      });
+    });
+
+    function selectFirstItemInList() {
       let name: string;
 
       const firstItem = page.getListItems().first();
       const nameElement = page.getNameElementFromList();
 
-      nameElement
+      const namePromise = nameElement
         .getText()
         .then(text => {
           name = text;
           return firstItem.click();
         })
-        .then(() => expect(page.getDetailTitle().getText()).toMatch('Details'))
-        .then(() => expect(page.getDetailNameInputValue()).toMatch(name));
-    });
+        .then(() => name);
+
+      return {
+        firstItem,
+        nameElement,
+        namePromise
+      };
+    }
   }
 });
