@@ -52,4 +52,17 @@ export class AppPage {
       add: buttons[1]
     };
   }
+
+  async selectFirstItemInList() {
+    const firstItem = this.getListItems().first();
+    const nameElement = this.getNameElementFromList();
+    const name = await nameElement.getText();
+    await firstItem.click();
+
+    return {
+      firstItem,
+      nameElement,
+      name
+    };
+  }
 }
