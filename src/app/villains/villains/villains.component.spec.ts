@@ -203,32 +203,24 @@ describe('VillainsComponent (mock VillainService)', () => {
         })
       );
 
-      // Cannot test this because cannot find a way to type in the input box that Angular recognizes.
-      // const nameBox: HTMLInputElement = detailEl.query(By.css('input[formControlName=name')).nativeElement;
-      // But setting or dispatching keyboard events doesn't work
-      it('should save changes by clicking save');
+      it('should save update by clicking save', fakeAsync(() => {
+        const { detailEl, fixture, testVillainService } = openDetailForSelected();
 
-      it(
-        'should save changes when call detailComponent.save...()',
-        fakeAsync(() => {
-          const {
-            detailEl,
-            fixture,
-            testVillainService
-          } = openDetailForSelected();
+        const detailComponent: VillainDetailComponent = detailEl.componentInstance;
 
-          const detailComponent: VillainDetailComponent =
-            detailEl.componentInstance;
+        const inputBox: HTMLInputElement = detailEl.query(By.css('input[formControlName=name')).nativeElement;
+        inputBox.value = 'new name';
+        // Must dispatch the input box's `input` event so Angular hears it.
+        inputBox.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
 
-          // Mess with the form control because can't type in the input box in a unit test.
-          // Note that changed value does not propagate because spy does nothing.
-          const nameControl = detailComponent.form.controls.name;
-          nameControl.setValue('new name');
-          nameControl.markAsDirty();
-          detailComponent.saveVillain();
-          expect(testVillainService.update).toHaveBeenCalled();
-        })
-      );
+        const saveButton: HTMLButtonElement = detailEl.query(By.css('button[type=submit')).nativeElement;
+        saveButton.click();
+        fixture.detectChanges();
+
+        // Changed value does not propagate to list because spy does nothing in this test
+        expect(testVillainService.update).toHaveBeenCalled();
+      }));
 
       function openDetailForSelected() {
         const { fixture, testVillainService } = villainListComponentSetup();
@@ -269,28 +261,24 @@ describe('VillainsComponent (mock VillainService)', () => {
         })
       );
 
-      // Cannot test this because cannot find a way to type in the input box that Angular recognizes.
-      // const nameBox: HTMLInputElement = detailEl.query(By.css('input[formControlName=name')).nativeElement;
-      // But setting or dispatching keyboard events doesn't work
-      it('should save changes by clicking save');
+      it('should save new entity by clicking save', fakeAsync(() => {
+        const { detailEl, fixture, testVillainService } = openDetailForNew();
 
-      it(
-        'should save changes when call detailComponent.save...()',
-        fakeAsync(() => {
-          const { detailEl, fixture, testVillainService } = openDetailForNew();
+        const detailComponent: VillainDetailComponent = detailEl.componentInstance;
 
-          const detailComponent: VillainDetailComponent =
-            detailEl.componentInstance;
+        const inputBox: HTMLInputElement = detailEl.query(By.css('input[formControlName=name')).nativeElement;
+        inputBox.value = 'new name';
+        // Must dispatch the input box's `input` event so Angular hears it.
+        inputBox.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
 
-          // Mess with the form control because can't type in the input box in a unit test.
-          // Note that changed value does not propagate because spy does nothing.
-          const nameControl = detailComponent.form.controls.name;
-          nameControl.setValue('new name');
-          nameControl.markAsDirty();
-          detailComponent.saveVillain();
-          expect(testVillainService.add).toHaveBeenCalled();
-        })
-      );
+        const saveButton: HTMLButtonElement = detailEl.query(By.css('button[type=submit')).nativeElement;
+        saveButton.click();
+        fixture.detectChanges();
+
+        // Changed value does not propagate to list because spy does nothing in this test
+        expect(testVillainService.add).toHaveBeenCalled();
+      }));
 
       function openDetailForNew() {
         const { fixture, testVillainService } = villainListComponentSetup();

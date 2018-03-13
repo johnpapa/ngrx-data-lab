@@ -4,20 +4,9 @@ This quick start begins with a working angular app that has CRUD operations for 
 
 > What are we doing? Great question! We're going to start with a reactive Angular app and add ngrx to it, using the ngrx-data library.
 
-## Let's go!
-
-Here are the steps to add ngrx-data to your reactive angular app, in a nutshell:
-
-1.  Open your reactive Angular app
-2.  npm install the NgRx libraries
-3.  Create the NgRx store
-4.  Tell the store about your entities
-5.  Refactor the data services to use NgRx
-6.  Run it!
-
 ### Step 1 - Get the app and install ngrx
 
-This sample app shows and allows editing of heroes and villains. The app uses a traditional data service to get the heroes and villains. Well be adding ngrx and ngrx-data to this application.
+This sample app allows editing of heroes and villains. The app uses a traditional data service to get the heroes and villains. We'll be adding ngrx and ngrx-data to this application.
 
 ```bash
 git clone https://github.com/johnpapa/ngrx-data-lab.git
@@ -34,7 +23,7 @@ We start by creating the NgRx store module for our application. Execute the foll
 ng g m store/app-store --flat -m app
 ```
 
-We must import the NgRx store, effects, and (for development only) the dev tools. To do this, replace the contents of `app-store.module.ts` with the following code.
+First we set up NgRx itself by importing the NgRx store, effects, and the dev tools. Replace the contents of `app-store.module.ts` with the following code.
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -53,15 +42,15 @@ import { environment } from '../../environments/environment';
 export class AppStoreModule {}
 ```
 
-### Step 3 - Define the entites for our store
+### Step 3 - Define the entities for our store
 
-We have a root store for NgRx named `app-store.modules.ts`. NgRx allows us to create features, and our ngrx-data entity cache is a feature. Next we create the entity store for ngrx-data and tell the Angular CLI to import it into our app-store module.
+NgRx allows us to create features, and our ngrx-data entity cache is a feature. Next we create the entity store for ngrx-data and tell the Angular CLI to import it into our app-store module.
 
 ```bash
 ng g m store/entity-store --flat -m store/app-store
 ```
 
-We need to tell ngrx-data about our entities. We create an `EntityMetadataMap` and any custom pluralization of our entities. We create a constant of type `EntityMetadataMap` and define a set of properties, one for each entity name. We also define how to pluralize our entities, for those not simply needing an 's' appended to them (e.g. Hero --> Heroes).
+We need to tell ngrx-data about our entities so we create an `EntityMetadataMap` and define a set of properties, one for each entity name.
 
 > We have two entities: Hero and Villain. As you might imagine, we add one line of code for every additional entity. That's it!
 
@@ -76,14 +65,12 @@ export const entityMetadata: EntityMetadataMap = {
   Villain: {}
 };
 
+// because the plural of "hero" is not "heros"
 export const pluralNames = { Hero: 'Heroes' };
 
 @NgModule({
   imports: [
-    NgrxDataModule.forRoot({
-      entityMetadata: entityMetadata,
-      pluralNames: pluralNames
-    })
+    NgrxDataModule.forRoot({ entityMetadata: entityMetadata, pluralNames: pluralNames})
   ]
 })
 export class EntityStoreModule {}
@@ -91,14 +78,11 @@ export class EntityStoreModule {}
 
 ### Step 4 - Simplify the Hero and Villain data services
 
-Our application gets heroes and villains via Http from `hero.service.ts` and `villain.service.ts`, respectively. ngrx-data handles getting and saving our data (e.g. CRUD techniques) for us, if we ask it to.
-
-Replace the contents of `heroes/hero.service.ts` with the following code.
+ngrx-data handles getting and saving our data for us. Replace the contents of `heroes/hero.service.ts` with the following code.
 
 ```typescript
 import { Injectable } from '@angular/core';
 import { EntityServiceBase, EntityServiceFactory } from 'ngrx-data';
-
 import { Hero } from '../core';
 
 @Injectable()
@@ -114,7 +98,6 @@ Replace the contents of `villains/villain.service.ts` with the following code.
 ```typescript
 import { Injectable } from '@angular/core';
 import { EntityServiceBase, EntityServiceFactory } from 'ngrx-data';
-
 import { Villain } from '../core';
 
 @Injectable()
