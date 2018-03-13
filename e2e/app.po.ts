@@ -21,12 +21,28 @@ export class AppPage {
     return element(by.css('.list-container mat-card-title'));
   }
 
+  getDetail() {
+    return element(by.css('.detail-container'));
+  }
+
+  getDetailNameInputValue() {
+    return this.getDetail()
+      .element(by.css('input[formcontrolname="name"]'))
+      .getAttribute('value');
+  }
+
   getDetailTitle() {
-    return element(by.css('.detail-container mat-card-title'));
+    return this.getDetail().element(by.css('mat-card-title'));
   }
 
   getListItems() {
     return element.all(by.css('mat-card-content li'));
+  }
+
+  getNameElementFromList() {
+    return this.getListItems()
+      .first()
+      .element(by.css('div.name'));
   }
 
   getTopButtons() {
