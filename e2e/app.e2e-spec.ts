@@ -19,9 +19,7 @@ describe('ngrx-data-lab App', () => {
 
   describe('Villains', () => {
     const entityName = 'villains';
-    beforeEach(async () => {
-      await page.navigateToVillains();
-    });
+    beforeEach(async () => await page.navigateToVillains());
     runNavigationTests(entityName);
   });
 
@@ -38,15 +36,33 @@ describe('ngrx-data-lab App', () => {
       expect(await page.getListItems().count()).toBeGreaterThan(0);
     });
 
-    describe('when selecting an item from list', () => {
+    describe(`when selecting an item from ${entityName} list`, () => {
       it(`should open detail`, async () => {
         await page.selectFirstItemInList();
         expect(await page.getDetailTitle().getText()).toMatch('Details');
       });
 
       it(`should have matching name in selected list and detail item`, async () => {
-        const { name } = await page.selectFirstItemInList();
-        expect(await page.getDetailNameInputValue()).toMatch(name);
+        const { name: originalListName } = await page.selectFirstItemInList();
+        expect(await page.getDetailNameInputValue()).toMatch(originalListName);
+      });
+
+      it(`should not save when editing and canceling`, async () => {
+        const { name: originalListName } = await page.selectFirstItemInList();
+        const newName = await page.changeDetailsName('new name');
+        await page.closeDetails();
+        expect(await page.getDetailNameInput().isPresent()).toBe(false);
+        expect(originalListName).not.toMatch(newName);
+      });
+
+      it(`should save when editing and saving`, async () => {
+        const { name: originalListName } = await page.selectFirstItemInList();
+        const newName = await page.changeDetailsName('new name');
+        await page.saveDetails();
+        const updatedListName = await page.getNameElementFromList().getText();
+        expect(await page.getDetailNameInput().isPresent()).toBe(false);
+        expect(updatedListName).toMatch(newName);
+        expect(originalListName).not.toMatch(updatedListName);
       });
     });
   }
