@@ -78,9 +78,7 @@ export class EntityStoreModule {}
 
 ### Step 4 - Simplify the Hero and Villain data services
 
-Our application gets heroes and villains via Http from `hero.service.ts` and `villain.service.ts`, respectively. ngrx-data handles getting and saving our data (e.g. CRUD techniques) for us.
-
-Replace the contents of `heroes/hero.service.ts` with the following code.
+ngrx-data handles getting and saving our data for us. Replace the contents of `heroes/hero.service.ts` with the following code.
 
 ```typescript
 import { Injectable } from '@angular/core';
