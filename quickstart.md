@@ -53,7 +53,7 @@ import { environment } from '../../environments/environment';
 export class AppStoreModule {}
 ```
 
-### Step 3 - Define the entites for our store
+### Step 3 - Define the entities for our store
 
 We have a root store for NgRx named `app-store.modules.ts`. NgRx allows us to create features, and our ngrx-data entity cache is a feature. Next we create the entity store for ngrx-data and tell the Angular CLI to import it into our app-store module.
 
@@ -76,6 +76,7 @@ export const entityMetadata: EntityMetadataMap = {
   Villain: {}
 };
 
+// because the plural of "hero" is not "heros"
 export const pluralNames = { Hero: 'Heroes' };
 
 @NgModule({
