@@ -9,13 +9,6 @@ describe('ngrx-data-lab App', () => {
     page = new AppPage();
   });
 
-  // describe('async', () => {
-  //   it('should work', async () => {
-  //     await page.navigateToHeroes();
-  //     expect(await page.getListTitle().getText()).toMatch('Heroes');
-  //   });
-  // });
-
   describe('Heroes', () => {
     const entityName = 'heroes';
     beforeEach(async () => {
