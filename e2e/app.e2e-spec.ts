@@ -16,7 +16,7 @@ describe('ngrx-data-lab App', () => {
   //   });
   // });
 
-  // describe('Heroes', () => {
+  describe('Heroes', () => {
     const entityName = 'heroes';
     beforeEach(async () => {
       await page.navigateToHeroes();
