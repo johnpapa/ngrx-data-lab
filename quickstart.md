@@ -4,9 +4,15 @@ This quick start begins with a working angular app that has CRUD operations for 
 
 > What are we doing? Great question! We're going to start with a reactive Angular app and add ngrx to it, using the ngrx-data library.
 
+https://stackblitz.com/github/johnpapa/ngrx-data-lab?file=quickstart.md
+
+## Let's go!
+
+Try these steps yourself on your computer, or if you prefer follow along [here on StackBlitz](https://stackblitz.com/github/johnpapa/ngrx-data-lab?file=quickstart.md).
+
 ### Step 1 - Get the app and install ngrx
 
-This sample app allows editing of heroes and villains. The app uses a traditional data service to get the heroes and villains. We'll be adding ngrx and ngrx-data to this application.
+The app uses a traditional data service to get the heroes and villains. We'll be adding ngrx and ngrx-data to this application.
 
 ```bash
 git clone https://github.com/johnpapa/ngrx-data-lab.git
@@ -70,7 +76,10 @@ export const pluralNames = { Hero: 'Heroes' };
 
 @NgModule({
   imports: [
-    NgrxDataModule.forRoot({ entityMetadata: entityMetadata, pluralNames: pluralNames})
+    NgrxDataModule.forRoot({
+      entityMetadata: entityMetadata,
+      pluralNames: pluralNames
+    })
   ]
 })
 export class EntityStoreModule {}
@@ -128,7 +137,7 @@ In retrospect, here are the changes we made to our app to add NgRx via the ngrx-
 * added these files `store/app-store.module.ts` and `store/entity-store.module.ts`
 * told NgRx and ngrx-data about our entities
 * refactored and simplified our data services `heroes/hero.service.ts` and `villains/villain.service.ts`
-* removed obsolete  `core/reactive-data.service.ts`
+* removed obsolete `core/reactive-data.service.ts`
 
 ## What we accomplished
 
