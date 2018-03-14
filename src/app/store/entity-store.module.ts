@@ -16,7 +16,7 @@ export const pluralNames = { Hero: 'Heroes' };
       pluralNames: pluralNames
     })
   ],
-  providers: [ NgrxDataToastService ]
+  providers: [NgrxDataToastService]
 })
 export class EntityStoreModule {
   constructor(toastService: NgrxDataToastService) {}
