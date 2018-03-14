@@ -110,7 +110,7 @@ export class VillainService extends EntityServiceBase<Villain> {
 
 ### Step 5 - Remove unused service
 
-You may be wondering what happened to `reactive-data.service.ts`. It is no longer needed since our app is using ngrx-data! So we can remove this file from our app and remove the reference to it in `core/index.ts`.
+You may be wondering what happened to the `ReactiveDataService` in `reactive-data.service.ts`. It is no longer needed since our app is using ngrx-data! So we can remove this file from our app and remove the reference to it in `core/index.ts`.
 
 ### Step 6 - Run it
 
@@ -132,7 +132,7 @@ In retrospect, here are the changes we made to our app to add NgRx via the ngrx-
 
 ## What we accomplished
 
-OK, but why? Why did we do this? Why should I care? This is a great question!
+OK, but why? Why did we do this? Why should I care?
 
 We just added the redux pattern to our app and configured it for two entities. Your app may have dozens or even hundreds of entities. Now imagine what you would need to do to support all of those entities with this pattern. With ngrx-data you add a single line of code to `store/entity-store.module.ts` for each entity and that's it! You heard that right, one line!
 
@@ -148,8 +148,7 @@ We can restore notifications with these easy, one-time steps.
 
 ### Bonus Step 1 - Add an _NgrxDataToastService_ class
 
-Create a `ngrx-data-toast.service.ts` file in the `store/` folder and
-add the following code:
+Create a `ngrx-data-toast.service.ts` file in the `store/` folder and add the following code:
 
 ```javascript
 import { Injectable } from '@angular/core';
@@ -172,17 +171,13 @@ export class NgrxDataToastService {
 
 The service listens to the _ngrx-data_ `EntityActions` observable, which publishes all _ngrx-data_ entity actions.
 
-We'll only notify the user about HTTP success and failure so we use
-the built-in `EntityActions.where()` operator to filter for entity operation names that end in "_SUCCESS" or "_ERROR".
+We'll only notify the user about HTTP success and failure so we use the built-in `EntityActions.where()` operator to filter for entity operation names that end in "_SUCCESS" or "_ERROR".
 
 The subscribe method raises a toast message for those actions (`toast.openSnackBar()`).
 
-
-
 ## Bonus Step 2 - Provide and inject the _NgrxDataToastService_ class
 
-We must _provide_ and _inject_ the `NgrxDataToastService` class _somewhere_
-so it can start listening for ngrx-data actions.
+We must _provide_ and _inject_ the `NgrxDataToastService` class _somewhere_ so it can start listening for ngrx-data actions.
 
 The `EntityStoreModule` is an excellent place to do both. Modify it as follows.
 
