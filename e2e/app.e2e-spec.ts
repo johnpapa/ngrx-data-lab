@@ -1,6 +1,6 @@
 'use strict'; // necessary for es6 output in node.js
 import { AppPage } from './app.po';
-import { browser, by, element } from 'protractor';
+import { browser, by, element, ExpectedConditions } from 'protractor';
 
 describe('ngrx-data-lab App', () => {
   let page: AppPage;
@@ -38,6 +38,59 @@ describe('ngrx-data-lab App', () => {
       expect(await page.getListItems().count()).toEqual(originalListCount - 1);
     });
 
+    describe(`when pressing add to create a new ${entityName}`, () => {
+      it(`should open detail`, async () => {
+        await page.clickAddButton();
+        expect(await page.getDetailTitle().getText()).toMatch('Details');
+      });
+
+      it(`should NOT have matching name in selected list and detail item`, async () => {
+        const { name: originalListName } = await page.getFirstItemInList();
+        await page.clickAddButton();
+        expect(await page.getDetailNameInputValue()).not.toMatch(
+          originalListName
+        );
+        expect(await page.getDetailNameInputValue()).toMatch('');
+      });
+
+      it(`should not save when canceling`, async () => {
+        await page.clickAddButton();
+        const { name: originalListName } = await page.getFirstItemInList();
+        const newName = await page.changeDetailsName('new name');
+        await page.closeDetails();
+        expect(await page.getDetailFormElement('name').isPresent()).toBe(false);
+        expect(originalListName).not.toMatch(newName);
+      });
+
+      fit(`should save when saving`, async () => {
+        const originalListCount = await page.getListItems().count();
+        await page.clickAddButton();
+        const newName = await page.changeDetailsName('new name');
+        const newSaying = await page.changeDetailsSaying('new saying');
+        await page.saveDetails();
+
+        // const EC = ExpectedConditions;
+        // browser.wait(EC.stalenessOf(page.getDetailTitle()), 5000);
+
+        expect(await page.getListItems().count()).toEqual(
+          originalListCount + 1
+        );
+
+        expect(await page.getDetailFormElement('name').isPresent()).toBe(false);
+        expect(
+          await page.getElementFromListByClass('name', newName).getText()
+        ).toBe(newName);
+
+        expect(await page.getDetailFormElement('saying').isPresent()).toBe(
+          false
+        );
+        expect(
+          await page.getElementFromListByClass('saying', newSaying).getText()
+        ).toBe(newSaying);
+
+      });
+    });
+
     describe(`when selecting an item from ${entityName} list`, () => {
       it(`should open detail`, async () => {
         await page.selectFirstItemInList();
@@ -53,7 +106,7 @@ describe('ngrx-data-lab App', () => {
         const { name: originalListName } = await page.selectFirstItemInList();
         const newName = await page.changeDetailsName('new name');
         await page.closeDetails();
-        expect(await page.getDetailNameInput().isPresent()).toBe(false);
+        expect(await page.getDetailFormElement('name').isPresent()).toBe(false);
         expect(originalListName).not.toMatch(newName);
       });
 
@@ -61,8 +114,10 @@ describe('ngrx-data-lab App', () => {
         const { name: originalListName } = await page.selectFirstItemInList();
         const newName = await page.changeDetailsName('new name');
         await page.saveDetails();
-        const updatedListName = await page.getNameElementFromList().getText();
-        expect(await page.getDetailNameInput().isPresent()).toBe(false);
+        const updatedListName = await page
+          .getFirstElementFromList('name')
+          .getText();
+        expect(await page.getDetailFormElement('name').isPresent()).toBe(false);
         expect(updatedListName).toMatch(newName);
         expect(originalListName).not.toMatch(updatedListName);
       });
