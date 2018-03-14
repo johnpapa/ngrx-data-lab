@@ -62,7 +62,7 @@ describe('ngrx-data-lab App', () => {
         expect(originalListName).not.toMatch(newName);
       });
 
-      fit(`should save when saving`, async () => {
+      it(`should save when saving`, async () => {
         const originalListCount = await page.getListItems().count();
         await page.clickAddButton();
         const newName = await page.changeDetailsName('new name');

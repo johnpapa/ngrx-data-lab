@@ -126,14 +126,13 @@ export class AppPage {
   }
 
   async changeDetailsName(newValue: string) {
-    const name: ElementFinder = await this.getDetailFormElement('name');
+    const name: ElementFinder = this.getDetailFormElement('name');
     await name.sendKeys(newValue);
     return newValue;
   }
 
   async changeDetailsSaying(newValue: string) {
-    // const saying = await this.getDetailFormElement('saying');
-    const saying = await this.getDetail().element(by.css('textarea'));
+    const saying = this.getDetailFormElement('saying');
     await saying.sendKeys(newValue);
     return newValue;
   }
