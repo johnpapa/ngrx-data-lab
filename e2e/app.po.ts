@@ -66,12 +66,6 @@ export class AppPage {
       .element(by.css(`div.${elName}`));
   }
 
-  // getLastElementFromListByClass(className) {
-  //   return this.getListItems()
-  //     .last()
-  //     .element(by.css(`div.${className}`));
-  // }
-
   getElementFromListByClass(className, value) {
     return element(by.cssContainingText(`.${className}`, value));
   }
