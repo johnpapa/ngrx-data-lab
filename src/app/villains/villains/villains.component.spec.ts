@@ -203,24 +203,36 @@ describe('VillainsComponent (mock VillainService)', () => {
         })
       );
 
-      it('should save update by clicking save', fakeAsync(() => {
-        const { detailEl, fixture, testVillainService } = openDetailForSelected();
+      it(
+        'should save update by clicking save',
+        fakeAsync(() => {
+          const {
+            detailEl,
+            fixture,
+            testVillainService
+          } = openDetailForSelected();
 
-        const detailComponent: VillainDetailComponent = detailEl.componentInstance;
+          const detailComponent: VillainDetailComponent =
+            detailEl.componentInstance;
 
-        const inputBox: HTMLInputElement = detailEl.query(By.css('input[formControlName=name')).nativeElement;
-        inputBox.value = 'new name';
-        // Must dispatch the input box's `input` event so Angular hears it.
-        inputBox.dispatchEvent(new Event('input'));
-        fixture.detectChanges();
+          const inputBox: HTMLInputElement = detailEl.query(
+            By.css('input[formControlName=name')
+          ).nativeElement;
+          inputBox.value = 'new name';
+          // Must dispatch the input box's `input` event so Angular hears it.
+          inputBox.dispatchEvent(new Event('input'));
+          fixture.detectChanges();
 
-        const saveButton: HTMLButtonElement = detailEl.query(By.css('button[type=submit')).nativeElement;
-        saveButton.click();
-        fixture.detectChanges();
+          const saveButton: HTMLButtonElement = detailEl.query(
+            By.css('button[type=submit')
+          ).nativeElement;
+          saveButton.click();
+          fixture.detectChanges();
 
-        // Changed value does not propagate to list because spy does nothing in this test
-        expect(testVillainService.update).toHaveBeenCalled();
-      }));
+          // Changed value does not propagate to list because spy does nothing in this test
+          expect(testVillainService.update).toHaveBeenCalled();
+        })
+      );
 
       function openDetailForSelected() {
         const { fixture, testVillainService } = villainListComponentSetup();
@@ -261,24 +273,32 @@ describe('VillainsComponent (mock VillainService)', () => {
         })
       );
 
-      it('should save new entity by clicking save', fakeAsync(() => {
-        const { detailEl, fixture, testVillainService } = openDetailForNew();
+      it(
+        'should save new entity by clicking save',
+        fakeAsync(() => {
+          const { detailEl, fixture, testVillainService } = openDetailForNew();
 
-        const detailComponent: VillainDetailComponent = detailEl.componentInstance;
+          const detailComponent: VillainDetailComponent =
+            detailEl.componentInstance;
 
-        const inputBox: HTMLInputElement = detailEl.query(By.css('input[formControlName=name')).nativeElement;
-        inputBox.value = 'new name';
-        // Must dispatch the input box's `input` event so Angular hears it.
-        inputBox.dispatchEvent(new Event('input'));
-        fixture.detectChanges();
+          const inputBox: HTMLInputElement = detailEl.query(
+            By.css('input[formControlName=name')
+          ).nativeElement;
+          inputBox.value = 'new name';
+          // Must dispatch the input box's `input` event so Angular hears it.
+          inputBox.dispatchEvent(new Event('input'));
+          fixture.detectChanges();
 
-        const saveButton: HTMLButtonElement = detailEl.query(By.css('button[type=submit')).nativeElement;
-        saveButton.click();
-        fixture.detectChanges();
+          const saveButton: HTMLButtonElement = detailEl.query(
+            By.css('button[type=submit')
+          ).nativeElement;
+          saveButton.click();
+          fixture.detectChanges();
 
-        // Changed value does not propagate to list because spy does nothing in this test
-        expect(testVillainService.add).toHaveBeenCalled();
-      }));
+          // Changed value does not propagate to list because spy does nothing in this test
+          expect(testVillainService.add).toHaveBeenCalled();
+        })
+      );
 
       function openDetailForNew() {
         const { fixture, testVillainService } = villainListComponentSetup();
