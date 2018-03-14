@@ -32,6 +32,12 @@ describe('ngrx-data-lab App', () => {
       expect(await page.getListItems().count()).toBeGreaterThan(0);
     });
 
+    it(`should remove item when deleted`, async () => {
+      const originalListCount = await page.getListItems().count();
+      await page.deleteFirstListItem();
+      expect(await page.getListItems().count()).toEqual(originalListCount - 1);
+    });
+
     describe(`when selecting an item from ${entityName} list`, () => {
       it(`should open detail`, async () => {
         await page.selectFirstItemInList();

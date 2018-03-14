@@ -18,6 +18,11 @@ export class AppPage {
     return browser.get('/villains');
   }
 
+  async deleteFirstListItem() {
+    const firstDeleteButton = this.getFirstDeleteButton();
+    await firstDeleteButton.click();
+  }
+
   getToolbarLinks() {
     return element.all(by.css('mat-toolbar a[routerlinkactive]'));
   }
@@ -48,6 +53,10 @@ export class AppPage {
 
   getDetailTitle() {
     return this.getDetail().element(by.css('mat-card-title'));
+  }
+
+  getFirstDeleteButton() {
+    return element.all(by.css('button.delete-button')).first();
   }
 
   getListItems() {
