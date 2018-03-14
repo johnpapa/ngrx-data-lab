@@ -139,3 +139,65 @@ We just added the redux pattern to our app and configured it for two entities. Y
 ngrx-data provides all commonly used selectors, actions, action creators, reducers, and effects out of the box.
 
 It is only natural that our apps may not follow the exact conventions that ngrx-data uses. That's OK! If your entity needs a different reducer or effect, you can replace those via configuration. If your web API url doesn't follow the pattern `/api/heroes`, that's OK! Just override the convention with your own configuration. All of the custom tweaks that you want are available to you when you need them.
+
+## Bonus: re-enable toast notifications for ngrx-data
+
+When we migrated to _ngrx-data_, we lost the toast notifications that were part of the `ReactiveDataService` (now deleted).
+
+We can restore notifications with these easy, one-time steps.
+
+### Bonus Step 1 - Add an _NgrxDataToastService_ class
+
+Create a `ngrx-data-toast.service.ts` file in the `store/` folder and
+add the following code:
+
+```javascript
+import { Injectable } from '@angular/core';
+import { EntityActions, OP_ERROR, OP_SUCCESS } from 'ngrx-data';
+import { ToastService } from '../core/toast.service';
+
+/** Report ngrx-data success/error actions as toast messages **/
+@Injectable()
+export class NgrxDataToastService {
+  constructor(actions$: EntityActions, toast: ToastService) {
+    actions$
+      .where(ea => ea.op.endsWith(OP_SUCCESS) || ea.op.endsWith(OP_ERROR))
+      // this service never dies so no need to unsubscribe
+      .subscribe(action =>
+        toast.openSnackBar(`${action.entityName} action`, action.op)
+      );
+  }
+}
+```
+
+The service listens to the _ngrx-data_ `EntityActions` observable, which publishes all _ngrx-data_ entity actions.
+
+We'll only notify the user about HTTP success and failure so we use
+the built-in `EntityActions.where()` operator to filter for entity operation names that end in "_SUCCESS" or "_ERROR".
+
+The subscribe method raises a toast message for those actions (`toast.openSnackBar()`).
+
+
+
+## Bonus Step 2 - Provide and inject the _NgrxDataToastService_ class
+
+We must _provide_ and _inject_ the `NgrxDataToastService` class _somewhere_
+so it can start listening for ngrx-data actions.
+
+The `EntityStoreModule` is an excellent place to do both. Modify it as follows.
+
+```javascript
+// (a) import the service
+import { NgrxDataToastService } from './ngrx-data-toast.service';
+...
+@NgModule({
+  ...
+  // (b) provide it
+  providers: [ NgrxDataToastService ]
+})
+export class EntityStoreModule {
+  // (c) inject it in the module's constructor
+  constructor(toastService: NgrxDataToastService) {}
+}
+
+```

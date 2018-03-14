@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { EntityMetadataMap, NgrxDataModule } from 'ngrx-data';
+import { NgrxDataToastService } from './ngrx-data-toast.service';
 
 export const entityMetadata: EntityMetadataMap = {
   Hero: {},
@@ -14,6 +15,9 @@ export const pluralNames = { Hero: 'Heroes' };
       entityMetadata: entityMetadata,
       pluralNames: pluralNames
     })
-  ]
+  ],
+  providers: [ NgrxDataToastService ]
 })
-export class EntityStoreModule {}
+export class EntityStoreModule {
+  constructor(toastService: NgrxDataToastService) {}
+}
