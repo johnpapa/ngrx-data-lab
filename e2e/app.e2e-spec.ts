@@ -38,6 +38,26 @@ describe('ngrx-data-lab App', () => {
       expect(await page.getListItems().count()).toEqual(originalListCount - 1);
     });
 
+    describe(`when pressing refresh on ${entityName}`, () => {
+      it(`should have same number of items`, async () => {
+        const originalListCount = await page.getListItems().count();
+        await page.clickRefreshButton();
+        const refreshedListCount = await page.getListItems().count();
+        expect(originalListCount).toEqual(refreshedListCount);
+      });
+
+      it(`should close detail`, async () => {
+        await page.clickRefreshButton();
+        expect(await page.getDetailTitle().isPresent()).toBe(false);
+      });
+
+      it(`when selecting an item and the refreshing, should close detail`, async () => {
+        await page.selectFirstItemInList();
+        await page.clickRefreshButton();
+        expect(await page.getDetailTitle().isPresent()).toBe(false);
+      });
+    });
+
     describe(`when pressing add to create a new ${entityName}`, () => {
       it(`should open detail`, async () => {
         await page.clickAddButton();
@@ -87,7 +107,6 @@ describe('ngrx-data-lab App', () => {
         expect(
           await page.getElementFromListByClass('saying', newSaying).getText()
         ).toBe(newSaying);
-
       });
     });
 

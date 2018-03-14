@@ -37,6 +37,7 @@ export class VillainsComponent
 
   getVillains() {
     this.villainService.getAll();
+    this.close();
   }
 
   add(villain: Villain) {
