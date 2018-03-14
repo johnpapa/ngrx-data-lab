@@ -12,20 +12,17 @@
         </div>
         <div>
           <mat-form-field>
-            <input matInput formControlName="name" placeholder="name"  #name
-              (keyup.esc)="close()" (keyup.enter)="saveVillain()">
+            <input matInput formControlName="name" placeholder="name" #name (keyup.esc)="close()" (keyup.enter)="saveVillain()">
           </mat-form-field>
         </div>
         <div>
           <mat-form-field>
-            <textarea matInput formControlName="saying" placeholder="saying" #saying
-              (keyup.esc)="close()" (keyup.enter)="saveVillain()"></textarea>
+            <textarea matInput formControlName="saying" placeholder="saying" #saying (keyup.esc)="close()" (keyup.enter)="saveVillain()"></textarea>
           </mat-form-field>
         </div>
       </div>
       <button mat-raised-button color="accent" type="button" (click)="close()" matTooltip="Cancel all changes">Cancel</button>
-      <button mat-raised-button color="primary" type="submit"
-        [disabled]="form.pristine || form.invalid" matTooltip="Save all changes">Save</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.pristine || form.invalid" matTooltip="Save all changes">Save</button>
     </form>
   </mat-card-content>
 </mat-card>
