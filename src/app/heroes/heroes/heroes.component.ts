@@ -36,6 +36,7 @@ export class HeroesComponent implements MasterDetailCommands<Hero>, OnInit {
 
   getHeroes() {
     this.heroService.getAll();
+    this.close();
   }
 
   add(hero: Hero) {
