@@ -45,6 +45,7 @@ export class HeroesComponent implements MasterDetailCommands<Hero>, OnInit {
 
   delete(hero: Hero) {
     this.heroService.delete(hero.id);
+    this.close();
   }
 
   update(hero: Hero) {

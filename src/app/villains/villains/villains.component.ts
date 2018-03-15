@@ -46,6 +46,7 @@ export class VillainsComponent
 
   delete(villain: Villain) {
     this.villainService.delete(villain.id);
+    this.close();
   }
 
   update(villain: Villain) {
