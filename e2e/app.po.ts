@@ -12,11 +12,11 @@ by.addLocator(
 
 export class AppPage {
   navigateToHeroes() {
-    return browser.get('/heroes');
+    return browser.get('/heroes/?e2e');
   }
 
   navigateToVillains() {
-    return browser.get('/villains');
+    return browser.get('/villains/?e2e');
   }
 
   async deleteFirstListItem() {
