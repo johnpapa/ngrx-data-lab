@@ -36,6 +36,7 @@ describe('ngrx-data-lab App', () => {
       const originalListCount = await page.getListItems().count();
       await page.deleteFirstListItem();
       expect(await page.getListItems().count()).toEqual(originalListCount - 1);
+      expect(await page.getDetailTitle().isPresent()).toBe(false);
     });
 
     describe(`when pressing refresh on ${entityName}`, () => {
