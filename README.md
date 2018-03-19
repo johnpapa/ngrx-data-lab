@@ -160,7 +160,7 @@ When we migrated to _ngrx-data_, we lost the toast notifications that were part 
 Create a `ngrx-data-toast.service.ts` file using the following CLI command
 
 ```bash
-ng g s store/ngrx-date-toast -m store/entity-store --spec false
+ng g s store/ngrx-data-toast -m store/entity-store --spec false
 ```
 
 ### Bonus Step 2 - Show toasts on success and error actions
