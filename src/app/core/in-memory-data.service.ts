@@ -65,7 +65,7 @@ export class InMemoryDataService {
    */
   parseRequestUrl(url: string, utils: RequestInfoUtilities): ParsedRequestUrl {
     const parsed = utils.parseRequestUrl(url);
-    const isDefaultRoot = parsed.apiBase === 'api';
+    const isDefaultRoot = parsed.apiBase === 'api/';
     parsed.collectionName =
       this.active && isDefaultRoot
         ? mapCollectionName(parsed.collectionName)
