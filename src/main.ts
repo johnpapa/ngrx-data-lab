@@ -11,7 +11,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-// platformBrowserDynamic().bootstrapModule(AppModule)
 platformBrowserDynamic()
+  // .bootstrapModule(AppModule)
   .bootstrapModule(AppDevModule)
   .catch(err => console.log(err));
