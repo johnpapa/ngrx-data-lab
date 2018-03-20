@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
-import { isE2E } from './e2e-check';
+import { Injectable } from "@angular/core";
+import { MatSnackBar } from "@angular/material";
+import { isE2E } from "./e2e-check";
 
 @Injectable()
 export class ToastService {
-  constructor(public snackBar: MatSnackBar) { }
+  constructor(public snackBar: MatSnackBar) {}
 
   openSnackBar(message: string, action: string) {
     if (isE2E) {
