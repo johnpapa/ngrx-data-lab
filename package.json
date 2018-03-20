@@ -10,17 +10,12 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "xpre-commit": "ng lint --fix --force && pretty-quick && git add .",
     "pre-commit": "lint-staged",
     "pretty": "pretty-quick "
   },
   "pre-commit": ["pre-commit"],
   "lint-staged": {
-    "*.{ts,js,json,css,md}": [
-      "ng lint --fix --force && ",
-      "prettier --write",
-      "git add"
-    ]
+    "*.{ts,js,json,css,md}": ["prettier --write", "git add"]
   },
   "private": true,
   "dependencies": {
