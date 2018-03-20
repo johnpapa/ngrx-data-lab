@@ -16,7 +16,11 @@
   },
   "pre-commit": ["pre-commit"],
   "lint-staged": {
-    "*.{ts,js,json,css,md}": ["prettier --write", "git add"]
+    "*.{ts,js,json,css,md}": [
+      "ng lint --fix --force && ",
+      "prettier --write",
+      "git add"
+    ]
   },
   "private": true,
   "dependencies": {
