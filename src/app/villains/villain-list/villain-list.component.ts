@@ -3,6 +3,8 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Villain,
 
 
+  
+
   MasterDetailCommands } from '../../core';
 
 @Component({
