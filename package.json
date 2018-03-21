@@ -4,12 +4,13 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "npx nodemon ./server/index.js",
+    "start": "npx nodemon server/index.js",
     "start-ng": "ng serve",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "pretty-quick": "pretty-quick"
   },
   "private": true,
   "dependencies": {
