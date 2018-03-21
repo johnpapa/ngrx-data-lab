@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "npx nodemon server/index.js",
+    "start": "npx nodemon ./server/index.js",
     "start-ng": "ng serve",
     "build": "ng build --prod",
     "test": "ng test",
