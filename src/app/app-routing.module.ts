@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+// Define the paths to the lazily loaded modules
+const lazyPaths = {
+  heroes: 'app/heroes/heroes.module#HeroesModule',
+  villains: 'app/villains/villains.module#VillainsModule'
+};
+
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'heroes' },
-  {
-    path: 'heroes',
-    loadChildren: 'app/heroes/heroes.module#HeroesModule'
-  },
-  {
-    path: 'villains',
-    loadChildren: 'app/villains/villains.module#VillainsModule'
-  }
+  { path: 'heroes', loadChildren: lazyPaths.heroes },
+  { path: 'villains', loadChildren: lazyPaths.villains }
 ];
 
 @NgModule({
