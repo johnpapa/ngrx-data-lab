@@ -1,32 +1,17 @@
 /**
- * EntityState represents collection in cache.
- * Advanced RxJS techniques
+ * v1 - caches for each collection property
+ * Basic RxJS techniques with numerous RxJS subjects
  */
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import {
-  concatMap,
-  combineLatest,
-  distinctUntilChanged,
-  map,
-  scan,
-  shareReplay,
-  take,
-  tap
-} from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { ToastService } from '../core';
 
 const api = '/api';
-
-/** State of a cached entity type */
-export interface EntityState<T> {
-  loading: boolean;
-  entities: T[];
-  error: string;
-}
 
 /**
  * Base REST-like DataService in reactive style for entity of type T
@@ -38,45 +23,21 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
   /** Name of the HTTP resource for an operation concerning multiple entities of the collection */
   protected collectionResource: string;
 
-  /** Source of entity state changes */
-  private entitiesSubject = new Subject<Partial<EntityState<T>>>();
-
-  /** Observable of the entire collection's cached state */
-  entityState$ = this.entitiesSubject.pipe(
-    // Update the state with a modified copy
-    scan(
-      (oldState, newState) => {
-        // copy new state over a copy of the old state
-        return { ...oldState, ...newState };
-      },
-      // Initial cache state
-      {
-        loading: false,
-        entities: [],
-        error: ''
-      }
-    ),
-    // cached observable
-    shareReplay(1)
-  );
+  // cached entities
+  private entities: T[];
+  private entitiesSubject = new BehaviorSubject<T[]>([]);
+  protected errorsSubject = new Subject<string>();
+  protected loadingSubject = new BehaviorSubject(false);
 
   // #region selectors
-
   /** Observable of cached entities */
-  entities$ = this.entityState$.pipe(map(state => state.entities));
-
-  /** Observable of flag indicating when the service is loading data from the server */
-  loading$ = this.entityState$.pipe(
-    map(state => state.loading),
-    distinctUntilChanged()
-  );
+  public entities$ = this.entitiesSubject.asObservable();
 
   /** Observable of error messages */
-  errors$ = this.entityState$.pipe(
-    map(state => state.error),
-    distinctUntilChanged()
-  );
+  errors$ = this.errorsSubject.asObservable();
 
+  /** Observable of flag indicating when the service is loading data from the server */
+  loading$ = this.loadingSubject.asObservable();
   // #endregion selectors
 
   constructor(
@@ -88,9 +49,6 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
     this.entityNamePlural = entityNamePlural || entityName + 's';
     this.entityResource = this.entityName.toLowerCase();
     this.collectionResource = this.entityNamePlural.toLowerCase();
-
-    // Subscribe so the cache lasts the life of this service instance
-    this.entityState$.subscribe();
   }
 
   /**
@@ -98,12 +56,12 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
    * Turns loading$ flag on and off
    */
   getAll() {
-    this.updateState({ loading: true });
-
+    this.loadingSubject.next(true);
     this.http
       .get<T[]>(`${api}/${this.collectionResource}`)
       .subscribe(entities => {
-        this.updateState({ entities, loading: false });
+        this.next(entities);
+        this.loadingSubject.next(false);
         this.log(`${this.entityNamePlural} retrieved.`, 'GET');
       }, this.handleError('Retrieval', 'GET'));
   }
@@ -114,19 +72,11 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
    * @param id of the entity to delete
    */
   delete(id: number | string) {
-    this.entities$
-      .pipe(
-        // delete optimistically
-        take(1),
-        tap(entities =>
-          this.updateState({
-            // new entities collection, minus the entity with the delete id
-            entities: entities.filter(e => e.id !== id)
-          })
-        ),
-        // then tell the server to delete
-        concatMap(() => this.http.delete(`${api}/${this.entityResource}/${id}`))
-      )
+    // delete optimistically
+    this.next(this.entities.filter(e => e.id !== id));
+
+    this.http
+      .delete(`${api}/${this.entityResource}/${id}`)
       .subscribe(
         () => this.log(`${this.entityName} with id=${id} deleted.`, 'DELETE'),
         this.handleError('Delete', 'DELETE')
@@ -142,12 +92,8 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
   add(entity: T) {
     this.http
       .post<T>(`${api}/${this.entityResource}/`, entity)
-      .pipe(combineLatest(this.entities$), take(1))
-      .subscribe(([addedEntity, entities]) => {
-        this.updateState({
-          // new entities collection, with added entity on the end
-          entities: entities.concat(addedEntity)
-        });
+      .subscribe(addedEntity => {
+        this.next(this.entities.concat(addedEntity));
         this.log(`${this.entityName} added.`, 'POST');
       }, this.handleError('Add', 'POST'));
   }
@@ -162,19 +108,15 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
   update(entity: T) {
     this.http
       .put<T>(`${api}/${this.entityResource}/${entity.id}`, entity)
-      .pipe(combineLatest(this.entities$), take(1))
-      .subscribe(([updatedEntity, entities]) => {
-        this.updateState({
-          // new entities collection, copied from old, with updated entity replaced
-          entities: entities.map(
+      .subscribe(updatedEntity => {
+        this.next(
+          this.entities.map(
             e => (e.id === entity.id ? updatedEntity || entity : e)
           )
-        });
+        );
         this.log(`${this.entityName} updated.`, 'PUT');
       }, this.handleError('Update', 'PUT'));
   }
-
-  // #region helpers
 
   /**
    * Prepare an error handler for failed HTTP requests.
@@ -188,11 +130,12 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
     return function errorHandler(res: HttpErrorResponse) {
       console.error(res);
       const eMsg = res.message || '';
-      const error = `${this.entityNamePlural} ${operation} Error${
+      const msg = `${this.entityNamePlural} ${operation} Error${
         eMsg ? ': ' + eMsg : ''
       }`;
-      this.log(error, method);
-      this.updateState({ error, loading: false });
+      this.log(msg, method);
+      this.errorsSubject.next(msg);
+      this.loadingSubject.next(false);
     }.bind(this);
   }
 
@@ -205,10 +148,9 @@ export abstract class ReactiveDataService<T extends { id: number | string }> {
     this.toastService.openSnackBar(message, method);
   }
 
-  /** Update the collection state; selectors update too */
-  protected updateState(newState: Partial<EntityState<T>>) {
-    this.entitiesSubject.next(newState);
+  /** Set the cached entities and emit on the entities$ observable */
+  protected next(entities: T[]) {
+    this.entities = entities;
+    this.entitiesSubject.next(entities);
   }
-
-  // #endregion helpers
 }
