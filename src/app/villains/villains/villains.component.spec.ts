@@ -1,5 +1,5 @@
 /*
- * Test the component by mocking its injected ngrx-data HeroesService
+ * Test the component by mocking its injected ngrx-data VillainService
  *
  * You have a choice of testing the component class alone or the component-and-its-template.
  * The latter requires importing more stuff and a bit more setup.
@@ -348,7 +348,6 @@ function villainsComponentCoreSetup() {
   TestBed.configureTestingModule({
     providers: [
       VillainsComponent, // When testing class-only
-      VillainService,
       { provide: VillainService, useValue: testVillainService }
     ]
   });
