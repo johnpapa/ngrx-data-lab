@@ -189,3 +189,36 @@ export class NgrxDataToastService {
   }
 }
 ```
+
+### Bonus Step 3 - instantiate `NgrxDataToastService` at startup
+
+We need to make sure our new toast service loads.
+
+Replace the code in `entity-store.modules.ts` with the following code.
+
+```javascript
+import { NgModule } from '@angular/core';
+import { EntityMetadataMap, NgrxDataModule } from 'ngrx-data';
+import { NgrxDataToastService } from './ngrx-data-toast.service';
+
+export const entityMetadata: EntityMetadataMap = {
+  Hero: {},
+  Villain: {}
+};
+
+// because the plural of "hero" is not "heros"
+export const pluralNames = { Hero: 'Heroes' };
+
+@NgModule({
+  imports: [
+    NgrxDataModule.forRoot({
+      entityMetadata: entityMetadata,
+      pluralNames: pluralNames
+    })
+  ],
+  providers: [NgrxDataToastService]
+})
+export class EntityStoreModule {
+  constructor(private toast: NgrxDataToastService) {}
+}
+```
