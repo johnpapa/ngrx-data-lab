@@ -171,6 +171,8 @@ We'll only notify the user about HTTP success and failure so we use the built-in
 
 The subscribe method raises a toast message for those actions (`toast.openSnackBar()`).
 
+Replace the contents of `store/ngrx-data-toast.service.ts` with the following code.
+
 ```javascript
 import { Injectable } from '@angular/core';
 import { EntityActions, OP_ERROR, OP_SUCCESS } from 'ngrx-data';
@@ -187,5 +189,37 @@ export class NgrxDataToastService {
         toast.openSnackBar(`${action.entityName} action`, action.op)
       );
   }
+}
+```
+
+Replace the contents of `store/entity-store.module.ts` with the following code to add the toastService to the EntityStoreModule constructor and providers section.
+```javascript
+import { NgModule } from '@angular/core';
+import { EntityMetadataMap, NgrxDataModule } from 'ngrx-data';
+import { NgrxDataToastService } from './ngrx-data-toast.service';
+import { isE2E } from '../core';
+
+export const entityMetadata: EntityMetadataMap = {
+  Hero: {},
+  Villain: {}
+};
+
+// because the plural of "hero" is not "heros"
+export const pluralNames = { Hero: 'Heroes' };
+
+@NgModule({
+  imports: [
+    NgrxDataModule.forRoot({
+      entityMetadata: entityMetadata,
+      pluralNames: pluralNames
+    })
+  ],
+  providers: [
+    NgrxDataToastService
+  ]
+})
+export class EntityStoreModule {
+  // Inject NgrxDataToastService to start it listening
+  constructor(toastService: NgrxDataToastService) {}
 }
 ```
