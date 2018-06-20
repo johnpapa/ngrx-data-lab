@@ -98,8 +98,8 @@ import { Hero } from '../core';
 
 @Injectable()
 export class HeroService extends EntityCollectionServiceBase<Hero> {
-  constructor(entityServiceFactory: EntityCollectionServiceFactory) {
-    super('Hero', entityServiceFactory);
+  constructor(entityCollectionServiceFactory: EntityCollectionServiceFactory) {
+    super('Hero', entityCollectionServiceFactory);
   }
 }
 ```
@@ -113,8 +113,8 @@ import { Villain } from '../core';
 
 @Injectable()
 export class VillainService extends EntityCollectionServiceBase<Villain> {
-  constructor(entityServiceFactory: EntityCollectionServiceFactory) {
-    super('Villain', entityServiceFactory);
+  constructor(entityCollectionServiceFactory: EntityCollectionServiceFactory) {
+    super('Villain', entityCollectionServiceFactory);
   }
 }
 ```
