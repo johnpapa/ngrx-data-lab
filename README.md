@@ -93,12 +93,12 @@ ngrx-data handles getting and saving our data for us. Replace the contents of `h
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { EntityServiceBase, EntityServiceFactory } from 'ngrx-data';
+import { EntityCollectionServiceBase, EntityCollectionServiceFactory } from 'ngrx-data';
 import { Hero } from '../core';
 
 @Injectable()
-export class HeroService extends EntityServiceBase<Hero> {
-  constructor(entityServiceFactory: EntityServiceFactory) {
+export class HeroService extends EntityCollectionServiceBase<Hero> {
+  constructor(entityServiceFactory: EntityCollectionServiceFactory) {
     super('Hero', entityServiceFactory);
   }
 }
@@ -108,12 +108,12 @@ Replace the contents of `villains/villain.service.ts` with the following code.
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { EntityServiceBase, EntityServiceFactory } from 'ngrx-data';
+import { EntityCollectionServiceBase, EntityCollectionServiceFactory } from 'ngrx-data';
 import { Villain } from '../core';
 
 @Injectable()
-export class VillainService extends EntityServiceBase<Villain> {
-  constructor(entityServiceFactory: EntityServiceFactory) {
+export class VillainService extends EntityCollectionServiceBase<Villain> {
+  constructor(entityServiceFactory: EntityCollectionServiceFactory) {
     super('Villain', entityServiceFactory);
   }
 }
