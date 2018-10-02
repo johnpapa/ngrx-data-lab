@@ -169,25 +169,37 @@ ng g s store/ngrx-data-toast -m store/entity-store --spec false
 
 The service listens to the _ngrx-data_ `EntityActions` observable, which publishes all _ngrx-data_ entity actions.
 
-We'll only notify the user about HTTP success and failure so we use the built-in `EntityActions.where()` operator to filter for entity operation names that end in "_SUCCESS" or "_ERROR".
+We'll only notify the user about HTTP success and failure so we use the RxJs `pipe` operator and then we filter for entity operation names that end in "_SUCCESS" or "_ERROR".
 
 The subscribe method raises a toast message for those actions (`toast.openSnackBar()`).
 
 ```javascript
 import { Injectable } from '@angular/core';
-import { EntityActions, OP_ERROR, OP_SUCCESS } from 'ngrx-data';
+import { Actions, ofType } from '@ngrx/effects';
+import {
+  EntityAction, EntityCacheAction, ofEntityOp, OP_ERROR, OP_SUCCESS,
+} from 'ngrx-data';
+import { filter } from 'rxjs/operators';
 import { ToastService } from '../core/toast.service';
 
-/** Report ngrx-data success/error actions as toast messages **/
-@Injectable()
+/** Report ngrx-data success/error actions as toast messages * */
+@Injectable({ providedIn: 'root' })
 export class NgrxDataToastService {
-  constructor(actions$: EntityActions, toast: ToastService) {
+  constructor(actions$: Actions, toast: ToastService) {
     actions$
-      .where(ea => ea.op.endsWith(OP_SUCCESS) || ea.op.endsWith(OP_ERROR))
+      .pipe(
+        ofEntityOp(),
+        filter(
+          (ea: EntityAction) => ea.payload.entityOp.endsWith(OP_SUCCESS) || ea.payload.entityOp.endsWith(OP_ERROR),
+        ),
+      )
       // this service never dies so no need to unsubscribe
-      .subscribe(action =>
-        toast.openSnackBar(`${action.entityName} action`, action.op)
-      );
+      .subscribe(action => toast.openSnackBar(`${action.payload.entityName} action`, action.payload.entityOp));
+
+    actions$
+      .pipe(ofType(EntityCacheAction.SAVE_ENTITIES_SUCCESS, EntityCacheAction.SAVE_ENTITIES_ERROR))
+      .subscribe((action: any) => toast.openSnackBar(`${action.type} - url: ${action.payload.url}`, 'SaveEntities'));
   }
 }
+
 ```
