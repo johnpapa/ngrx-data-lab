@@ -93,30 +93,32 @@ ngrx-data handles getting and saving our data for us. Replace the contents of `h
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { EntityServiceBase, EntityServiceFactory } from 'ngrx-data';
+import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from 'ngrx-data';
 import { Hero } from '../core';
 
-@Injectable()
-export class HeroService extends EntityServiceBase<Hero> {
-  constructor(entityServiceFactory: EntityServiceFactory) {
-    super('Hero', entityServiceFactory);
+@Injectable({ providedIn: 'root' })
+export class HeroService extends EntityCollectionServiceBase<Hero> {
+  constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
+    super('Hero', serviceElementsFactory);
   }
 }
+
 ```
 
 Replace the contents of `villains/villain.service.ts` with the following code.
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { EntityServiceBase, EntityServiceFactory } from 'ngrx-data';
+import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from 'ngrx-data';
 import { Villain } from '../core';
 
-@Injectable()
-export class VillainService extends EntityServiceBase<Villain> {
-  constructor(entityServiceFactory: EntityServiceFactory) {
-    super('Villain', entityServiceFactory);
+@Injectable({ providedIn: 'root' })
+export class VillainService extends EntityCollectionServiceBase<Villain> {
+  constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
+    super('Villain', serviceElementsFactory);
   }
 }
+
 ```
 
 ### Step 5 - Remove unused service
