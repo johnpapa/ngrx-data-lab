@@ -52,48 +52,60 @@ export class AppStoreModule {}
 
 ### Step 3 - Define the entities for our store
 
-NgRx allows us to create features, and our ngrx-data entity cache is a feature. Next we create the entity store for ngrx-data and tell the Angular CLI to import it into our app-store module.
-
-```bash
-ng g m store/entity-store --flat -m store/app-store
-```
+Next we define the entities in our store by creating a plain TypeScript file named `entity-metadata.ts` in the `store` folder.
 
 We need to tell ngrx-data about our entities so we create an `EntityMetadataMap` and define a set of properties, one for each entity name.
 
 > We have two entities: Hero and Villain. As you might imagine, we add one line of code for every additional entity. That's it!
 
-Replace the code in the `entity-store.modules.ts` with the following code.
+Add the following code in the `entity-metadata.ts` to define our entities:
 
 ```typescript
-import { NgModule } from '@angular/core';
-import { EntityMetadataMap, NgrxDataModule } from 'ngrx-data';
+import { EntityMetadataMap } from 'ngrx-data';
 
-export const entityMetadata: EntityMetadataMap = {
+const entityMetadata: EntityMetadataMap = {
   Hero: {},
   Villain: {}
 };
 
 // because the plural of "hero" is not "heros"
-export const pluralNames = { Hero: 'Heroes' };
+const pluralNames = { Hero: 'Heroes' };
 
-@NgModule({
-  imports: [
-    NgrxDataModule.forRoot({
-      entityMetadata: entityMetadata,
-      pluralNames: pluralNames
-    })
-  ]
-})
-export class EntityStoreModule {}
+export const entityConfig = {
+  entityMetadata,
+  pluralNames
+};
 ```
 
-### Step 4 - Simplify the Hero and Villain data services
+Notice we export the entity configuration. We'll be importing that into our entity store in a moment.
+
+### Step 4 - Import the entity store into the app store
+
+We need to add the entity configuration that we just created in the previous step, and put it into the root store for NgRx. We do this by importing the `entityConfig` and then passing it to the `NgrxDataModule.forRoot()` function.
+
+Add the following two line of code to import the symbols.
+
+```typescript
+import { DefaultDataServiceConfig, NgrxDataModule } from 'ngrx-data';
+import { entityConfig } from './entity-metadata';
+```
+
+Then add the following line intot he `imports` array.
+
+```typescript
+  NgrxDataModule.forRoot(entityConfig),
+```
+
+### Step 5 - Simplify the Hero and Villain data services
 
 ngrx-data handles getting and saving our data for us. Replace the contents of `heroes/hero.service.ts` with the following code.
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from 'ngrx-data';
+import {
+  EntityCollectionServiceBase,
+  EntityCollectionServiceElementsFactory
+} from 'ngrx-data';
 import { Hero } from '../core';
 
 @Injectable({ providedIn: 'root' })
@@ -102,14 +114,16 @@ export class HeroService extends EntityCollectionServiceBase<Hero> {
     super('Hero', serviceElementsFactory);
   }
 }
-
 ```
 
 Replace the contents of `villains/villain.service.ts` with the following code.
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from 'ngrx-data';
+import {
+  EntityCollectionServiceBase,
+  EntityCollectionServiceElementsFactory
+} from 'ngrx-data';
 import { Villain } from '../core';
 
 @Injectable({ providedIn: 'root' })
@@ -118,14 +132,13 @@ export class VillainService extends EntityCollectionServiceBase<Villain> {
     super('Villain', serviceElementsFactory);
   }
 }
-
 ```
 
-### Step 5 - Remove unused service
+### Step 6 - Remove unused service
 
 You may be wondering what happened to the `ReactiveDataService` in `reactive-data.service.ts`. It is no longer needed since our app is using ngrx-data! So we can remove this file from our app and remove the reference to it in `core/index.ts`.
 
-### Step 6 - Run it
+### Step 7 - Run it
 
 Run the app!
 
@@ -169,7 +182,7 @@ ng g s store/ngrx-data-toast -m store/entity-store --spec false
 
 The service listens to the _ngrx-data_ `EntityActions` observable, which publishes all _ngrx-data_ entity actions.
 
-We'll only notify the user about HTTP success and failure so we use the RxJs `pipe` operator and then we filter for entity operation names that end in "_SUCCESS" or "_ERROR".
+We'll only notify the user about HTTP success and failure so we use the RxJs `pipe` operator and then we filter for entity operation names that end in "\_SUCCESS" or "\_ERROR".
 
 The subscribe method raises a toast message for those actions (`toast.openSnackBar()`).
 
@@ -177,7 +190,11 @@ The subscribe method raises a toast message for those actions (`toast.openSnackB
 import { Injectable } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
 import {
-  EntityAction, EntityCacheAction, ofEntityOp, OP_ERROR, OP_SUCCESS,
+  EntityAction,
+  EntityCacheAction,
+  ofEntityOp,
+  OP_ERROR,
+  OP_SUCCESS
 } from 'ngrx-data';
 import { filter } from 'rxjs/operators';
 import { ToastService } from '../core/toast.service';
@@ -190,16 +207,32 @@ export class NgrxDataToastService {
       .pipe(
         ofEntityOp(),
         filter(
-          (ea: EntityAction) => ea.payload.entityOp.endsWith(OP_SUCCESS) || ea.payload.entityOp.endsWith(OP_ERROR),
-        ),
+          (ea: EntityAction) =>
+            ea.payload.entityOp.endsWith(OP_SUCCESS) ||
+            ea.payload.entityOp.endsWith(OP_ERROR)
+        )
       )
       // this service never dies so no need to unsubscribe
-      .subscribe(action => toast.openSnackBar(`${action.payload.entityName} action`, action.payload.entityOp));
+      .subscribe(action =>
+        toast.openSnackBar(
+          `${action.payload.entityName} action`,
+          action.payload.entityOp
+        )
+      );
 
     actions$
-      .pipe(ofType(EntityCacheAction.SAVE_ENTITIES_SUCCESS, EntityCacheAction.SAVE_ENTITIES_ERROR))
-      .subscribe((action: any) => toast.openSnackBar(`${action.type} - url: ${action.payload.url}`, 'SaveEntities'));
+      .pipe(
+        ofType(
+          EntityCacheAction.SAVE_ENTITIES_SUCCESS,
+          EntityCacheAction.SAVE_ENTITIES_ERROR
+        )
+      )
+      .subscribe((action: any) =>
+        toast.openSnackBar(
+          `${action.type} - url: ${action.payload.url}`,
+          'SaveEntities'
+        )
+      );
   }
 }
-
 ```
