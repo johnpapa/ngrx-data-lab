@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Villain } from '../../core';
 import { VillainService } from '../villain.service';
@@ -6,8 +6,7 @@ import { VillainService } from '../villain.service';
 @Component({
   selector: 'app-villains',
   templateUrl: './villains.component.html',
-  styleUrls: ['./villains.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./villains.component.scss']
 })
 export class VillainsComponent implements OnInit {
   selected: Villain;
@@ -23,10 +22,6 @@ export class VillainsComponent implements OnInit {
 
   add(villain: Villain) {
     this.villainService.add(villain);
-  }
-
-  clear() {
-    this.selected = null;
   }
 
   close() {

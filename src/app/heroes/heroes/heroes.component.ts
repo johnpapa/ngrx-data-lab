@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Hero } from '../../core';
 import { HeroService } from '../hero.service';
@@ -6,8 +6,7 @@ import { HeroService } from '../hero.service';
 @Component({
   selector: 'app-heroes',
   templateUrl: './heroes.component.html',
-  styleUrls: ['./heroes.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./heroes.component.scss']
 })
 export class HeroesComponent implements OnInit {
   selected: Hero;
@@ -23,10 +22,6 @@ export class HeroesComponent implements OnInit {
 
   add(hero: Hero) {
     this.heroService.add(hero);
-  }
-
-  clear() {
-    this.selected = null;
   }
 
   close() {

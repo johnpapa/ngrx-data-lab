@@ -52,10 +52,10 @@ export class HeroDetailComponent implements OnChanges {
     if (touched && valid) {
       this.add.emit({ ...this.hero, ...value });
     }
-    this.clear();
+    this.close();
   }
 
-  clear() {
+  close() {
     this.unselect.emit();
   }
 
@@ -76,6 +76,6 @@ export class HeroDetailComponent implements OnChanges {
     if (touched && valid) {
       this.update.emit({ ...this.hero, ...value });
     }
-    this.clear();
+    this.close();
   }
 }
