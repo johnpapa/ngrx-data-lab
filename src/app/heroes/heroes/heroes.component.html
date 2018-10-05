@@ -1,8 +1,7 @@
 <div class="control-panel">
   <div class="button-panel">
     <button mat-raised-button color="primary" type="button" (click)="getHeroes()" matTooltip="Refresh the heroes">Refresh</button>
-    <button mat-raised-button color="primary" type="button" (click)="enableAddMode()" *ngIf="!addingHero && !selected"
-      matTooltip="Add a new hero">Add</button>
+    <button mat-raised-button color="primary" type="button" (click)="enableAddMode()" *ngIf="!selected" matTooltip="Add a new hero">Add</button>
   </div>
 </div>
 <div class="content-container">
@@ -15,8 +14,7 @@
     </div>
   </div>
   <div class="detail-container">
-    <app-hero-detail *ngIf="(selected || addingHero)" [hero]="selected" (unselect)="close()" (add)="add($event)"
-      (update)="update($event)">
+    <app-hero-detail *ngIf="selected" [hero]="selected" (unselect)="close()" (add)="add($event)" (update)="update($event)">
     </app-hero-detail>
   </div>
 </div>

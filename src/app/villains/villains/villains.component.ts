@@ -9,7 +9,6 @@ import { VillainService } from '../villain.service';
   styleUrls: ['./villains.component.scss']
 })
 export class VillainsComponent implements OnInit {
-  addingVillain = false;
   selected: Villain;
   villains: Villain[];
   loading: boolean;
@@ -18,6 +17,20 @@ export class VillainsComponent implements OnInit {
 
   ngOnInit() {
     this.getVillains();
+  }
+
+  add(villain: Villain) {
+    this.loading = true;
+    this.villainService
+      .add(villain)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(
+        addedvillain => (this.villains = this.villains.concat(addedvillain))
+      );
+  }
+
+  close() {
+    this.selected = null;
   }
 
   delete(villain: Villain) {
@@ -32,7 +45,6 @@ export class VillainsComponent implements OnInit {
   }
 
   enableAddMode() {
-    this.addingVillain = true;
     this.selected = null;
   }
 
@@ -46,8 +58,7 @@ export class VillainsComponent implements OnInit {
   }
 
   select(villain: Villain) {
-    this.addingVillain = false;
-    this.selected = villain;
+    this.selected = <any>{};
   }
 
   update(villain: Villain) {
@@ -61,20 +72,5 @@ export class VillainsComponent implements OnInit {
             h => (h.id === villain.id ? villain : h)
           ))
       );
-  }
-
-  add(villain: Villain) {
-    this.loading = true;
-    this.villainService
-      .add(villain)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(
-        addedvillain => (this.villains = this.villains.concat(addedvillain))
-      );
-  }
-
-  close() {
-    this.addingVillain = false;
-    this.selected = null;
   }
 }

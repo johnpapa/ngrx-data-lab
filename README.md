@@ -48,7 +48,6 @@ import { environment } from '../../environments/environment';
   ]
 })
 export class AppStoreModule {}
-
 ```
 
 ### Step 3 - Define the entities for our store
@@ -135,7 +134,63 @@ export class VillainService extends EntityCollectionServiceBase<Villain> {
 }
 ```
 
-### Step 6 - Run it
+### Step 6 - Refactor the Container Component to use Observables
+
+Our component currently uses an array of heroes. We need that to switch to an Observable so we can observe and display the changes made in the ngrx store.
+
+Open the `heroes.component.ts` file and modify the `heroes` array to be an `Observsable<Hero[]>`.
+
+```typescript
+heroes$: Observable<Hero[]>;
+```
+
+Add the import for Observable to the top of the file.
+
+```typescript
+import { Observable } from 'rxjs';
+```
+
+We need to listen for the stream of hereos. Set your new `heroes$` property to the Observable returned from the `heroeService.entities$`
+
+```typescript
+constructor(private heroService: HeroService) {
+  this.heroes$ = heroService.entities$;
+}
+```
+
+Here is the fun part, all of our logic in the component becomes simpler.
+
+The `add`, `delete`, `getHeroes`, and `update` methods get a whole lot simpler, and shorter as ngrx-data handles these common operations. Replace your similar methods with the following ones.
+
+```typescript
+add(hero: Hero) {
+  this.heroService.add(hero);
+}
+
+delete(hero: Hero) {
+  this.heroService.delete(hero);
+  this.close();
+}
+
+getHeroes() {
+  this.heroService.getAll();
+  this.close();
+}
+
+update(hero: Hero) {
+  this.heroService.update(hero);
+}
+```
+
+The only change to our template is to look at the observable of `heroes$` instead of the former array of heroes. Change the `*ngIf` by adding the `async` pipe and labelling the result as `heroes`.
+
+```html
+  <div *ngIf="heroes$ | async as heroes">
+```
+
+Now repeat these steps for the `VillainsComponent`.
+
+### Step 7 - Run it
 
 Run the app!
 
@@ -164,7 +219,7 @@ It is only natural that our apps may not follow the exact conventions that ngrx-
 
 ## Bonus: re-enable toast notifications for ngrx-data
 
-When we migrated to _ngrx-data_, we lost the toast notifications that were part of the `ReactiveDataService` (now deleted). We can restore notifications with these easy, one-time steps.
+When we migrated to _ngrx-data_, we lost the toast notifications that were part of the services. We can restore notifications with these easy steps.
 
 ### Bonus Step 1 - Add a _NgrxDataToastService_
 

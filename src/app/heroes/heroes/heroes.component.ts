@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { Hero } from '../../core';
 import { HeroService } from '../hero.service';
@@ -9,7 +9,6 @@ import { HeroService } from '../hero.service';
   styleUrls: ['./heroes.component.scss']
 })
 export class HeroesComponent implements OnInit {
-  addingHero = false;
   selected: Hero;
   heroes: Hero[];
   loading: boolean;
@@ -18,6 +17,18 @@ export class HeroesComponent implements OnInit {
 
   ngOnInit() {
     this.getHeroes();
+  }
+
+  add(hero: Hero) {
+    this.loading = true;
+    this.heroService
+      .add(hero)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(addedHero => (this.heroes = this.heroes.concat(addedHero)));
+  }
+
+  close() {
+    this.selected = null;
   }
 
   delete(hero: Hero) {
@@ -32,8 +43,7 @@ export class HeroesComponent implements OnInit {
   }
 
   enableAddMode() {
-    this.addingHero = true;
-    this.selected = null;
+    this.selected = <any>{};
   }
 
   getHeroes() {
@@ -46,7 +56,6 @@ export class HeroesComponent implements OnInit {
   }
 
   select(hero: Hero) {
-    this.addingHero = false;
     this.selected = hero;
   }
 
@@ -59,18 +68,5 @@ export class HeroesComponent implements OnInit {
         () =>
           (this.heroes = this.heroes.map(h => (h.id === hero.id ? hero : h)))
       );
-  }
-
-  add(hero: Hero) {
-    this.loading = true;
-    this.heroService
-      .add(hero)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(addedHero => (this.heroes = this.heroes.concat(addedHero)));
-  }
-
-  close() {
-    this.addingHero = false;
-    this.selected = null;
   }
 }
