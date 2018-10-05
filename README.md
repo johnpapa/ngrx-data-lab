@@ -208,6 +208,7 @@ In retrospect, here are the changes we made to our app to add NgRx via the ngrx-
 * added these files `store/app-store.module.ts` and `store/entity-metadata.ts`
 * told NgRx and ngrx-data about our entities
 * refactored and simplified our data services `heroes/hero.service.ts` and `villains/villain.service.ts`
+* refactored and simplified our container components `heroes/heroes.component.ts` and `villains/villains.component.ts`
 
 ## What we accomplished
 
@@ -228,7 +229,7 @@ When we migrated to _ngrx-data_, we lost the toast notifications that were part 
 Create a `ngrx-data-toast.service.ts` file using the following CLI command
 
 ```bash
-ng g s store/ngrx-data-toast -m store/entity-store --spec false
+ng g s store/ngrx-data-toast -m store/app-store --spec false
 ```
 
 ### Bonus Step 2 - Show toasts on success and error actions
@@ -288,4 +289,26 @@ export class NgrxDataToastService {
       );
   }
 }
+```
+
+### Bonus Step 3 - Connect the toastService to the Store
+
+Inject the new service into the constructor for `AppStoreModule`
+
+```typescript
+  constructor(toastService: NgrxDataToastService) {}
+```
+
+Add the following import to the `AppStoreModule`
+
+```typescript
+import { NgrxDataToastService } from './ngrx-data-toast.service';
+```
+
+### Bonus Step 4 - Run it
+
+Run the app!
+
+```bash
+ng serve -o
 ```
