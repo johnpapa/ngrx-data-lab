@@ -1,15 +1,16 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  Input,
   ElementRef,
+  EventEmitter,
+  Input,
   OnChanges,
-  ViewChild,
+  Output,
   SimpleChanges,
-  ChangeDetectionStrategy
+  ViewChild
 } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-
-import { MasterDetailCommands, Villain } from '../../core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Villain } from '../../core';
 
 @Component({
   selector: 'app-villain-detail',
@@ -19,11 +20,14 @@ import { MasterDetailCommands, Villain } from '../../core';
 })
 export class VillainDetailComponent implements OnChanges {
   @Input() villain: Villain;
-  @Input() commands: MasterDetailCommands<Villain>;
+  @Output() unselect = new EventEmitter<string>();
+  @Output() add = new EventEmitter<Villain>();
+  @Output() update = new EventEmitter<Villain>();
 
   @ViewChild('name') nameElement: ElementRef;
 
   addMode = false;
+
   form = this.fb.group({
     id: [],
     name: ['', Validators.required],
@@ -43,22 +47,35 @@ export class VillainDetailComponent implements OnChanges {
     }
   }
 
-  close() {
-    this.commands.close();
+  addVillain(form: FormGroup) {
+    const { value, valid, touched } = form;
+    if (touched && valid) {
+      this.add.emit({ ...this.villain, ...value });
+    }
+    this.clear();
   }
 
-  saveVillain() {
-    const { dirty, valid, value } = this.form;
-    if (dirty && valid) {
-      const newVillain = { ...this.villain, ...value };
-      this.addMode
-        ? this.commands.add(newVillain)
-        : this.commands.update(newVillain);
+  clear() {
+    this.unselect.emit();
+  }
+
+  saveVillain(form: FormGroup) {
+    if (this.addMode) {
+      this.addVillain(form);
+    } else {
+      this.updateVillain(form);
     }
-    this.close();
   }
 
   setFocus() {
     this.nameElement.nativeElement.focus();
+  }
+
+  updateVillain(form: FormGroup) {
+    const { value, valid, touched } = form;
+    if (touched && valid) {
+      this.update.emit({ ...this.villain, ...value });
+    }
+    this.clear();
   }
 }

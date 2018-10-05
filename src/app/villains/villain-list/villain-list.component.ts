@@ -1,6 +1,12 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-
-import { Villain, MasterDetailCommands } from '../../core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output
+} from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+import { ModalComponent, Villain } from '../../core';
 
 @Component({
   selector: 'app-villain-list',
@@ -11,17 +17,36 @@ import { Villain, MasterDetailCommands } from '../../core';
 export class VillainListComponent {
   @Input() villains: Villain[];
   @Input() selectedVillain: Villain;
-  @Input() commands: MasterDetailCommands<Villain>;
+  @Output() deleted = new EventEmitter<Villain>();
+  @Output() selected = new EventEmitter<Villain>();
+
+  constructor(public dialog: MatDialog) {}
 
   byId(villain: Villain) {
     return villain.id;
   }
 
   onSelect(villain: Villain) {
-    this.commands.select(villain);
+    this.selected.emit(villain);
   }
 
   deleteVillain(villain: Villain) {
-    this.commands.delete(villain);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '250px';
+    dialogConfig.data = {
+      title: 'Delete Villain',
+      message: `Do you want to delete ${villain.name}`
+    };
+
+    const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(deleteIt => {
+      console.log('The dialog was closed');
+      if (deleteIt) {
+        this.deleted.emit(villain);
+      }
+    });
   }
 }

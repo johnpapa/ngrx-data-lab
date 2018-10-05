@@ -1,6 +1,12 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-
-import { Hero, MasterDetailCommands } from '../../core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output
+} from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+import { Hero, ModalComponent } from '../../core';
 
 @Component({
   selector: 'app-hero-list',
@@ -11,17 +17,36 @@ import { Hero, MasterDetailCommands } from '../../core';
 export class HeroListComponent {
   @Input() heroes: Hero[];
   @Input() selectedHero: Hero;
-  @Input() commands: MasterDetailCommands<Hero>;
+  @Output() deleted = new EventEmitter<Hero>();
+  @Output() selected = new EventEmitter<Hero>();
+
+  constructor(public dialog: MatDialog) {}
 
   byId(hero: Hero) {
     return hero.id;
   }
 
   onSelect(hero: Hero) {
-    this.commands.select(hero);
+    this.selected.emit(hero);
   }
 
   deleteHero(hero: Hero) {
-    this.commands.delete(hero);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '250px';
+    dialogConfig.data = {
+      title: 'Delete Hero',
+      message: `Do you want to delete ${hero.name}`
+    };
+
+    const dialogRef = this.dialog.open(ModalComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(deleteIt => {
+      console.log('The dialog was closed');
+      if (deleteIt) {
+        this.deleted.emit(hero);
+      }
+    });
   }
 }

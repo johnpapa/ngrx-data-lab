@@ -1,15 +1,16 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  Input,
   ElementRef,
+  EventEmitter,
+  Input,
   OnChanges,
-  ViewChild,
+  Output,
   SimpleChanges,
-  ChangeDetectionStrategy
+  ViewChild
 } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-
-import { Hero, MasterDetailCommands } from '../../core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Hero } from '../../core';
 
 @Component({
   selector: 'app-hero-detail',
@@ -19,11 +20,14 @@ import { Hero, MasterDetailCommands } from '../../core';
 })
 export class HeroDetailComponent implements OnChanges {
   @Input() hero: Hero;
-  @Input() commands: MasterDetailCommands<Hero>;
+  @Output() unselect = new EventEmitter<string>();
+  @Output() add = new EventEmitter<Hero>();
+  @Output() update = new EventEmitter<Hero>();
 
   @ViewChild('name') nameElement: ElementRef;
 
   addMode = false;
+
   form = this.fb.group({
     id: [],
     name: ['', Validators.required],
@@ -43,20 +47,35 @@ export class HeroDetailComponent implements OnChanges {
     }
   }
 
-  close() {
-    this.commands.close();
+  addHero(form: FormGroup) {
+    const { value, valid, touched } = form;
+    if (touched && valid) {
+      this.add.emit({ ...this.hero, ...value });
+    }
+    this.clear();
   }
 
-  saveHero() {
-    const { dirty, valid, value } = this.form;
-    if (dirty && valid) {
-      const newHero = { ...this.hero, ...value };
-      this.addMode ? this.commands.add(newHero) : this.commands.update(newHero);
+  clear() {
+    this.unselect.emit();
+  }
+
+  saveHero(form: FormGroup) {
+    if (this.addMode) {
+      this.addHero(form);
+    } else {
+      this.updateHero(form);
     }
-    this.close();
   }
 
   setFocus() {
     this.nameElement.nativeElement.focus();
+  }
+
+  updateHero(form: FormGroup) {
+    const { value, valid, touched } = form;
+    if (touched && valid) {
+      this.update.emit({ ...this.hero, ...value });
+    }
+    this.clear();
   }
 }

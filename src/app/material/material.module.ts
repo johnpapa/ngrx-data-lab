@@ -3,29 +3,32 @@ import {
   MatButtonModule,
   MatCardModule,
   MatIconModule,
+  MatInputModule,
   MatProgressSpinnerModule,
   MatSlideToggleModule,
   MatSnackBarModule,
-  MatTooltipModule,
   MatToolbarModule,
-  MatInputModule
+  MatTooltipModule,
+  MatDialogModule
 } from '@angular/material';
 
 @NgModule({
   imports: [
-    MatCardModule,
     MatButtonModule,
-    MatToolbarModule,
+    MatCardModule,
+    MatDialogModule,
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
     MatSnackBarModule,
+    MatToolbarModule,
     MatTooltipModule
   ],
   exports: [
     MatButtonModule,
     MatCardModule,
+    MatDialogModule,
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
