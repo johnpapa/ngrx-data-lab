@@ -12,6 +12,8 @@ This quick start begins with a working angular app that has CRUD operations for 
 
 Try these steps yourself on your computer, or if you prefer follow along [here on StackBlitz](https://stackblitz.com/github/johnpapa/ngrx-data-lab?file=quickstart.md).
 
+> If you don't want to try the steps yourself, you can jump right to the solution by cloning the `finish` branch.
+
 ### Step 1 - Get the app and install ngrx
 
 The app uses a traditional data service to get the heroes and villains. We'll be adding ngrx and ngrx-data to this application.
@@ -28,15 +30,15 @@ npm i @ngrx/effects @ngrx/entity @ngrx/store @ngrx/store-devtools ngrx-data --sa
 We start by creating the NgRx store module for our application. Execute the following code to generate the module and import it into our root NgModule.
 
 ```bash
-ng g m store/app-store --flat -m app
+ng g m store/app-store --flat -m app --spec false
 ```
 
 First we set up NgRx itself by importing the NgRx store, effects, and the dev tools. Replace the contents of `app-store.module.ts` with the following code.
 
 ```typescript
 import { NgModule } from '@angular/core';
-import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../../environments/environment';
 
@@ -83,14 +85,14 @@ Notice we export the entity configuration. We'll be importing that into our enti
 
 We need to add the entity configuration that we just created in the previous step, and put it into the root store for NgRx. We do this by importing the `entityConfig` and then passing it to the `NgrxDataModule.forRoot()` function.
 
-Add the following two line of code to import the symbols.
+Add the following two lines of code to import the symbols into `app-store.module.ts`.
 
 ```typescript
 import { DefaultDataServiceConfig, NgrxDataModule } from 'ngrx-data';
 import { entityConfig } from './entity-metadata';
 ```
 
-Then add the following line intot he `imports` array.
+Then add the following line into the `imports` array.
 
 ```typescript
   NgrxDataModule.forRoot(entityConfig),
@@ -134,9 +136,61 @@ export class VillainService extends EntityCollectionServiceBase<Villain> {
 }
 ```
 
-### Step 6 - Remove unused service
+### Step 6 - Refactor the Container Component to use Observables
 
-You may be wondering what happened to the `ReactiveDataService` in `reactive-data.service.ts`. It is no longer needed since our app is using ngrx-data! So we can remove this file from our app and remove the reference to it in `core/index.ts`.
+Our component currently uses an array of heroes. We need that to switch to an Observable so we can observe and display the changes made in the ngrx store.
+
+Open the `heroes.component.ts` file and modify the `heroes` array to be an `Observsable<Hero[]>`.
+
+```typescript
+heroes$: Observable<Hero[]>;
+```
+
+Add the import for Observable to the top of the file.
+
+```typescript
+import { Observable } from 'rxjs';
+```
+
+We need to listen for the stream of hereos. Set your new `heroes$` property to the Observable returned from the `heroeService.entities$`
+
+```typescript
+constructor(private heroService: HeroService) {
+  this.heroes$ = heroService.entities$;
+}
+```
+
+Here is the fun part, all of our logic in the component becomes simpler.
+
+The `add`, `delete`, `getHeroes`, and `update` methods get a whole lot simpler, and shorter as ngrx-data handles these common operations. Replace your similar methods with the following ones.
+
+```typescript
+add(hero: Hero) {
+  this.heroService.add(hero);
+}
+
+delete(hero: Hero) {
+  this.heroService.delete(hero);
+  this.close();
+}
+
+getHeroes() {
+  this.heroService.getAll();
+  this.close();
+}
+
+update(hero: Hero) {
+  this.heroService.update(hero);
+}
+```
+
+The only change to our template is to look at the observable of `heroes$` instead of the former array of heroes. Change the `*ngIf` by adding the `async` pipe and labelling the result as `heroes`.
+
+```html
+  <div *ngIf="heroes$ | async as heroes">
+```
+
+Now repeat these steps for the `VillainsComponent`.
 
 ### Step 7 - Run it
 
@@ -151,10 +205,9 @@ ng serve -o
 In retrospect, here are the changes we made to our app to add NgRx via the ngrx-data library.
 
 * installed our dependencies
-* added these files `store/app-store.module.ts` and `store/entity-store.module.ts`
+* added these files `store/app-store.module.ts` and `store/entity-metadata.ts`
 * told NgRx and ngrx-data about our entities
 * refactored and simplified our data services `heroes/hero.service.ts` and `villains/villain.service.ts`
-* removed obsolete `core/reactive-data.service.ts`
 
 ## What we accomplished
 
@@ -168,7 +221,7 @@ It is only natural that our apps may not follow the exact conventions that ngrx-
 
 ## Bonus: re-enable toast notifications for ngrx-data
 
-When we migrated to _ngrx-data_, we lost the toast notifications that were part of the `ReactiveDataService` (now deleted). We can restore notifications with these easy, one-time steps.
+When we migrated to _ngrx-data_, we lost the toast notifications that were part of the services. We can restore notifications with these easy steps.
 
 ### Bonus Step 1 - Add a _NgrxDataToastService_
 
