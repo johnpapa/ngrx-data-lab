@@ -12,6 +12,8 @@ This quick start begins with a working angular app that has CRUD operations for 
 
 Try these steps yourself on your computer, or if you prefer follow along [here on StackBlitz](https://stackblitz.com/github/johnpapa/ngrx-data-lab?file=quickstart.md).
 
+> If you don't want to try the steps yourself, you can jump right to the solution by cloning the `finish` branch.
+
 ### Step 1 - Get the app and install ngrx
 
 The app uses a traditional data service to get the heroes and villains. We'll be adding ngrx and ngrx-data to this application.
