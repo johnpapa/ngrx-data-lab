@@ -3,7 +3,7 @@
     <mat-card-title>Hero Details</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="form" (ngSubmit)="saveHero()">
+    <form [formGroup]="form" (ngSubmit)="saveHero(form)">
       <div class="editfields">
         <div [hidden]="addMode">
           <mat-form-field>
@@ -13,13 +13,13 @@
         <div>
           <mat-form-field>
             <input matInput formControlName="name" placeholder="name" #name
-             (keyup.esc)="close()" (keyup.enter)="saveHero()">
+             (keyup.esc)="close()" (keyup.enter)="saveHero(form)">
           </mat-form-field>
         </div>
         <div>
           <mat-form-field>
             <textarea matInput formControlName="saying" placeholder="saying" #saying
-              (keyup.esc)="close()" (keyup.enter)="saveHero()"></textarea>
+              (keyup.esc)="close()" (keyup.enter)="saveHero(form)"></textarea>
           </mat-form-field>
         </div>
       </div>

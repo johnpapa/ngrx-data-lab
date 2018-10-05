@@ -6,3 +6,7 @@
 .content-container {
   @include content-container-layout;
 }
+
+.button-panel > button {
+  margin-right: 12px;
+}

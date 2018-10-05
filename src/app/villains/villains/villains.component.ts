@@ -1,63 +1,85 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-
-import { MasterDetailCommands, Villain } from '../../core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { finalize } from 'rxjs/operators';
+import { Villain } from '../../core';
 import { VillainService } from '../villain.service';
 
 @Component({
   selector: 'app-villains',
   templateUrl: './villains.component.html',
-  styleUrls: ['./villains.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./villains.component.scss']
 })
-export class VillainsComponent
-  implements MasterDetailCommands<Villain>, OnInit {
-  selected: Villain;
-  commands = this;
+export class VillainsComponent implements OnInit {
+  addingVillain = false;
+  selectedVillain: Villain;
+  villains: Villain[];
+  loading: boolean;
 
-  villains$: Observable<Villain[]>;
-  loading$: Observable<boolean>;
-
-  constructor(private villainService: VillainService) {
-    this.villains$ = villainService.entities$;
-    this.loading$ = villainService.loading$;
-  }
+  constructor(private villainService: VillainService) {}
 
   ngOnInit() {
     this.getVillains();
   }
 
-  close() {
-    this.selected = null;
+  clear() {
+    this.addingVillain = false;
+    this.selectedVillain = null;
+  }
+
+  deleteVillain(villain: Villain) {
+    this.loading = true;
+    this.unselect();
+    this.villainService
+      .deleteVillain(villain)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(
+        () => (this.villains = this.villains.filter(h => h.id !== villain.id))
+      );
   }
 
   enableAddMode() {
-    this.selected = <any>{};
+    this.addingVillain = true;
+    this.selectedVillain = null;
   }
 
   getVillains() {
-    this.villainService.getAll();
-    this.close();
+    this.loading = true;
+    this.villainService
+      .getVillains()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(villains => (this.villains = villains));
+    this.unselect();
   }
 
-  add(villain: Villain) {
-    this.villainService.add(villain);
-  }
-
-  delete(villain: Villain) {
-    this.villainService.delete(villain.id);
-    this.close();
+  onSelect(villain: Villain) {
+    this.addingVillain = false;
+    this.selectedVillain = villain;
   }
 
   update(villain: Villain) {
-    this.villainService.update(villain);
+    this.loading = true;
+    this.villainService
+      .updateVillain(villain)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(
+        () =>
+          (this.villains = this.villains.map(
+            h => (h.id === villain.id ? villain : h)
+          ))
+      );
   }
 
-  select(villain: Villain) {
-    this.selected = villain;
+  add(villain: Villain) {
+    this.loading = true;
+    this.villainService
+      .addVillain(villain)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(
+        addedvillain => (this.villains = this.villains.concat(addedvillain))
+      );
   }
 
   unselect() {
-    this.selected = null;
+    this.addingVillain = false;
+    this.selectedVillain = null;
   }
 }
