@@ -34,7 +34,7 @@ export class VillainService {
       );
   }
 
-  getVillains() {
+  getAll() {
     return this.http
       .get<Array<Villain>>(`${api}/villains`)
       .pipe(
@@ -54,7 +54,7 @@ export class VillainService {
     return observableThrowError(res.error || 'Server error');
   }
 
-  deleteVillain(villain: Villain) {
+  delete(villain: Villain) {
     return this.http
       .delete(`${api}/villain/${villain.id}`)
       .pipe(
@@ -67,7 +67,7 @@ export class VillainService {
       );
   }
 
-  addVillain(villain: Villain) {
+  add(villain: Villain) {
     return this.http
       .post<Villain>(`${api}/villain/`, villain)
       .pipe(
@@ -80,7 +80,7 @@ export class VillainService {
       );
   }
 
-  updateVillain(villain: Villain) {
+  update(villain: Villain) {
     return this.http
       .put<Villain>(`${api}/villain/${villain.id}`, villain)
       .pipe(

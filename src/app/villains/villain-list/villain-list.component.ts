@@ -26,7 +26,7 @@ export class VillainListComponent {
     return villain.id;
   }
 
-  onSelect(villain: Villain) {
+  select(villain: Villain) {
     this.selected.emit(villain);
   }
 

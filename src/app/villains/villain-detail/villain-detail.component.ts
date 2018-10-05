@@ -52,10 +52,10 @@ export class VillainDetailComponent implements OnChanges {
     if (touched && valid) {
       this.add.emit({ ...this.villain, ...value });
     }
-    this.clear();
+    this.close();
   }
 
-  clear() {
+  close() {
     this.unselect.emit();
   }
 
@@ -76,6 +76,6 @@ export class VillainDetailComponent implements OnChanges {
     if (touched && valid) {
       this.update.emit({ ...this.villain, ...value });
     }
-    this.clear();
+    this.close();
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { Villain } from '../../core';
 import { VillainService } from '../villain.service';
@@ -10,7 +10,7 @@ import { VillainService } from '../villain.service';
 })
 export class VillainsComponent implements OnInit {
   addingVillain = false;
-  selectedVillain: Villain;
+  selected: Villain;
   villains: Villain[];
   loading: boolean;
 
@@ -20,16 +20,11 @@ export class VillainsComponent implements OnInit {
     this.getVillains();
   }
 
-  clear() {
-    this.addingVillain = false;
-    this.selectedVillain = null;
-  }
-
-  deleteVillain(villain: Villain) {
+  delete(villain: Villain) {
     this.loading = true;
-    this.unselect();
+    this.close();
     this.villainService
-      .deleteVillain(villain)
+      .delete(villain)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(
         () => (this.villains = this.villains.filter(h => h.id !== villain.id))
@@ -38,27 +33,27 @@ export class VillainsComponent implements OnInit {
 
   enableAddMode() {
     this.addingVillain = true;
-    this.selectedVillain = null;
+    this.selected = null;
   }
 
   getVillains() {
     this.loading = true;
     this.villainService
-      .getVillains()
+      .getAll()
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(villains => (this.villains = villains));
-    this.unselect();
+    this.close();
   }
 
-  onSelect(villain: Villain) {
+  select(villain: Villain) {
     this.addingVillain = false;
-    this.selectedVillain = villain;
+    this.selected = villain;
   }
 
   update(villain: Villain) {
     this.loading = true;
     this.villainService
-      .updateVillain(villain)
+      .update(villain)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(
         () =>
@@ -71,15 +66,15 @@ export class VillainsComponent implements OnInit {
   add(villain: Villain) {
     this.loading = true;
     this.villainService
-      .addVillain(villain)
+      .add(villain)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(
         addedvillain => (this.villains = this.villains.concat(addedvillain))
       );
   }
 
-  unselect() {
+  close() {
     this.addingVillain = false;
-    this.selectedVillain = null;
+    this.selected = null;
   }
 }

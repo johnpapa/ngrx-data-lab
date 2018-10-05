@@ -1,7 +1,7 @@
 <div class="control-panel">
   <div class="button-panel">
     <button mat-raised-button color="primary" type="button" (click)="getVillains()" matTooltip="Refresh the villains">Refresh</button>
-    <button mat-raised-button color="primary" type="button" (click)="enableAddMode()" *ngIf="!addingVillain && !selectedVillain"
+    <button mat-raised-button color="primary" type="button" (click)="enableAddMode()" *ngIf="!addingVillain && !selected"
       matTooltip="Add a new villain">Add</button>
   </div>
 </div>
@@ -10,13 +10,13 @@
     <div *ngIf="villains">
       <mat-spinner *ngIf="loading; else villainList" mode="indeterminate" color="accent"></mat-spinner>
       <ng-template #villainList>
-        <app-villain-list [villains]="villains" [selectedVillain]="selectedVillain" (deleted)="deleteVillain($event)"
-          (selected)="onSelect($event)"></app-villain-list>
+        <app-villain-list [villains]="villains" [selectedVillain]="selected" (deleted)="delete($event)"
+          (selected)="select($event)"></app-villain-list>
       </ng-template>
     </div>
   </div>
   <div class="detail-container">
-    <app-villain-detail *ngIf="(selectedVillain || addingVillain)" [villain]="selectedVillain" (unselect)="unselect()"
+    <app-villain-detail *ngIf="(selected || addingVillain)" [villain]="selected" (unselect)="close()"
       (add)="add($event)" (update)="update($event)">
     </app-villain-detail>
   </div>

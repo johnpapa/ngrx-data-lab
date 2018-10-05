@@ -20,7 +20,7 @@ export class HeroService {
     return this.http.get<any>(`${api}/profile`);
   }
 
-  getHeroes() {
+  getAll() {
     const url = `${api}/heroes`;
     const msg = 'Heroes retrieved successfully!';
     return this.http
@@ -36,7 +36,7 @@ export class HeroService {
     return observableThrowError(res.error || 'Server error');
   }
 
-  deleteHero(hero: Hero) {
+  delete(hero: Hero) {
     return this.http
       .delete(`${api}/hero/${hero.id}`)
       .pipe(
@@ -46,7 +46,7 @@ export class HeroService {
       );
   }
 
-  addHero(hero: Hero) {
+  add(hero: Hero) {
     return this.http
       .post<Hero>(`${api}/hero/`, hero)
       .pipe(
@@ -56,7 +56,7 @@ export class HeroService {
       );
   }
 
-  updateHero(hero: Hero) {
+  update(hero: Hero) {
     return this.http
       .put<Hero>(`${api}/hero/${hero.id}`, hero)
       .pipe(

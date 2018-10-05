@@ -10,8 +10,7 @@ import { HeroService } from '../hero.service';
 })
 export class HeroesComponent implements OnInit {
   addingHero = false;
-  selectedHero: Hero;
-
+  selected: Hero;
   heroes: Hero[];
   loading: boolean;
 
@@ -21,16 +20,11 @@ export class HeroesComponent implements OnInit {
     this.getHeroes();
   }
 
-  clear() {
-    this.addingHero = false;
-    this.selectedHero = null;
-  }
-
-  deleteHero(hero: Hero) {
+  delete(hero: Hero) {
     this.loading = true;
-    this.unselect();
+    this.close();
     this.heroService
-      .deleteHero(hero)
+      .delete(hero)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(
         () => (this.heroes = this.heroes.filter(h => h.id !== hero.id))
@@ -39,27 +33,27 @@ export class HeroesComponent implements OnInit {
 
   enableAddMode() {
     this.addingHero = true;
-    this.selectedHero = null;
+    this.selected = null;
   }
 
   getHeroes() {
     this.loading = true;
     this.heroService
-      .getHeroes()
+      .getAll()
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(heroes => (this.heroes = heroes));
-    this.unselect();
+    this.close();
   }
 
-  onSelect(hero: Hero) {
+  select(hero: Hero) {
     this.addingHero = false;
-    this.selectedHero = hero;
+    this.selected = hero;
   }
 
   update(hero: Hero) {
     this.loading = true;
     this.heroService
-      .updateHero(hero)
+      .update(hero)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(
         () =>
@@ -70,13 +64,13 @@ export class HeroesComponent implements OnInit {
   add(hero: Hero) {
     this.loading = true;
     this.heroService
-      .addHero(hero)
+      .add(hero)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(addedHero => (this.heroes = this.heroes.concat(addedHero)));
   }
 
-  unselect() {
+  close() {
     this.addingHero = false;
-    this.selectedHero = null;
+    this.selected = null;
   }
 }
