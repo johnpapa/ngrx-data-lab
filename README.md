@@ -200,6 +200,12 @@ Run the app!
 ng serve -o
 ```
 
+### Step 8 - Verify the Redux actions are being dispatched
+
+In the Chrome browser, open the DevTools and select the Redux tab to view the Redux plugin.
+
+In the application, add, update, and remove heroes and villains. As you do this, notice the actions being dispatched in the [Redux Devtools](https://github.com/zalmoxisus/redux-devtools-extension)
+
 ## What we did
 
 In retrospect, here are the changes we made to our app to add NgRx via the ngrx-data library.
