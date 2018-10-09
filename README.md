@@ -199,6 +199,9 @@ Run the app!
 ```bash
 ng serve -o
 ```
+### Step 8 - Verify the Redux actions are being dispatched 
+
+Navigate the application adding, updating, and removing heroes and villains. As you do this, notice the actions being dispatched in the  [Redux Devtools](https://github.com/zalmoxisus/redux-devtools-extension)
 
 ## What we did
 
