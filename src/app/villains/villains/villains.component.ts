@@ -9,11 +9,13 @@ import { VillainService } from '../villain.service';
   styleUrls: ['./villains.component.scss']
 })
 export class VillainsComponent implements OnInit {
+  loading$: Observable<boolean>;
   selected: Villain;
   villains$: Observable<Villain[]>;
 
   constructor(private villainService: VillainService) {
     this.villains$ = villainService.entities$;
+    this.loading$ = villainService.loading$;
   }
 
   ngOnInit() {

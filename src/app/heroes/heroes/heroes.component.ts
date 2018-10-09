@@ -9,11 +9,13 @@ import { HeroService } from '../hero.service';
   styleUrls: ['./heroes.component.scss']
 })
 export class HeroesComponent implements OnInit {
+  loading$: Observable<boolean>;
   selected: Hero;
   heroes$: Observable<Hero[]>;
 
   constructor(private heroService: HeroService) {
     this.heroes$ = heroService.entities$;
+    this.loading$ = heroService.loading$;
   }
 
   ngOnInit() {

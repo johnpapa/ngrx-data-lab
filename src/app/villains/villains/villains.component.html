@@ -7,7 +7,7 @@
 <div class="content-container">
   <div class="list-container">
     <div *ngIf="villains$ | async as villains">
-      <mat-spinner *ngIf="loading; else villainList" mode="indeterminate" color="accent"></mat-spinner>
+      <mat-spinner *ngIf="loading$ | async; else villainList" mode="indeterminate" color="accent"></mat-spinner>
       <ng-template #villainList>
         <app-villain-list [villains]="villains" [selectedVillain]="selected" (deleted)="delete($event)" (selected)="select($event)"></app-villain-list>
       </ng-template>
