@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
 })
 export class ToolbarComponent {
   labTitle = 'ngrx-data-lab';
-  labState = 'traditional angular app';
+  labState = 'now using ngrx-data';
 }
