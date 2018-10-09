@@ -140,10 +140,16 @@ export class VillainService extends EntityCollectionServiceBase<Villain> {
 
 Our component currently uses an array of heroes. We need that to switch to an Observable so we can observe and display the changes made in the ngrx store.
 
-Open the `heroes.component.ts` file and modify the `heroes` array to be an `Observsable<Hero[]>`.
+Open the `heroes.component.ts` file and modify the `heroes` array to be an `Observable<Hero[]>`.
 
 ```typescript
 heroes$: Observable<Hero[]>;
+```
+
+Modify the `loading` proeprty to be an `Observable<boolean>`.
+
+```typescript
+loading$: Observable<boolean>;
 ```
 
 Add the import for Observable to the top of the file.
@@ -188,6 +194,12 @@ The only change to our template is to look at the observable of `heroes$` instea
 
 ```html
   <div *ngIf="heroes$ | async as heroes">
+```
+
+Also find the `loading` refernce in this template file and change it to the following:
+
+```html
+  <mat-spinner *ngIf="loading$ | async;else heroList" mode="indeterminate" color="accent"></mat-spinner>
 ```
 
 Now repeat these steps for the `VillainsComponent`.
