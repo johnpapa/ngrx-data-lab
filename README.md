@@ -98,6 +98,11 @@ Then add the following line into the `imports` array.
   NgrxDataModule.forRoot(entityConfig),
 ```
 
+Next, we need to import the app store module into our app module. Add the following line into the `imports` array in `app.module.ts`
+```typescript
+  AppStoreModule,
+```
+
 ### Step 5 - Simplify the Hero and Villain data services
 
 ngrx-data handles getting and saving our data for us. Replace the contents of `heroes/hero.service.ts` with the following code.
@@ -196,7 +201,7 @@ The only change to our template is to look at the observable of `heroes$` instea
   <div *ngIf="heroes$ | async as heroes">
 ```
 
-Also find the `loading` refernce in this template file and change it to the following:
+Also find the `loading` reference in this template file and change it to the following:
 
 ```html
   <mat-spinner *ngIf="loading$ | async;else heroList" mode="indeterminate" color="accent"></mat-spinner>
