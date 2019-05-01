@@ -8,7 +8,7 @@ import {
   OP_SUCCESS
 } from 'ngrx-data';
 import { filter } from 'rxjs/operators';
-import { ToastService } from './core/toast.service';
+import { ToastService } from '../core/toast.service';
 
 /** Report ngrx-data success/error actions as toast messages * */
 @Injectable({ providedIn: 'root' })
