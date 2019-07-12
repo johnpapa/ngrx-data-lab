@@ -8,10 +8,15 @@ import { CoreModule } from './core';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'heroes' },
-  { path: 'heroes', loadChildren: 'app/heroes/heroes.module#HeroesModule' },
+  {
+    path: 'heroes',
+    loadChildren: () =>
+      import('app/heroes/heroes.module').then(m => m.HeroesModule)
+  },
   {
     path: 'villains',
-    loadChildren: 'app/villains/villains.module#VillainsModule'
+    loadChildren: () =>
+      import('app/villains/villains.module').then(m => m.VillainsModule)
   }
 ];
 
