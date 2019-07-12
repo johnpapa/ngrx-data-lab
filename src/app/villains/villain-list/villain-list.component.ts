@@ -5,7 +5,7 @@ import {
   Input,
   Output
 } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ModalComponent, Villain } from '../../core';
 
 @Component({
