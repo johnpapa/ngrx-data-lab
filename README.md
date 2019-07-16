@@ -140,10 +140,16 @@ export class VillainService extends EntityCollectionServiceBase<Villain> {
 
 Our component currently uses an array of heroes. We need that to switch to an Observable so we can observe and display the changes made in the ngrx store.
 
-Open the `heroes.component.ts` file and modify the `heroes` array to be an `Observsable<Hero[]>`.
+Open the `heroes.component.ts` file and modify the `heroes` array to be an `Observable<Hero[]>`.
 
 ```typescript
 heroes$: Observable<Hero[]>;
+```
+
+Modify the `loading` proeprty to be an `Observable<boolean>`.
+
+```typescript
+loading$: Observable<boolean>;
 ```
 
 Add the import for Observable to the top of the file.
@@ -190,6 +196,12 @@ The only change to our template is to look at the observable of `heroes$` instea
   <div *ngIf="heroes$ | async as heroes">
 ```
 
+Also find the `loading` refernce in this template file and change it to the following:
+
+```html
+  <mat-spinner *ngIf="loading$ | async;else heroList" mode="indeterminate" color="accent"></mat-spinner>
+```
+
 Now repeat these steps for the `VillainsComponent`.
 
 ### Step 7 - Run it
@@ -199,6 +211,12 @@ Run the app!
 ```bash
 ng serve -o
 ```
+
+### Step 8 - Verify the Redux actions are being dispatched
+
+In the Chrome browser, open the DevTools and select the Redux tab to view the Redux plugin.
+
+In the application, add, update, and remove heroes and villains. As you do this, notice the actions being dispatched in the [Redux Devtools](https://github.com/zalmoxisus/redux-devtools-extension)
 
 ## What we did
 
