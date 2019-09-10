@@ -6,7 +6,7 @@ import {
   ofEntityOp,
   OP_ERROR,
   OP_SUCCESS
-} from 'ngrx-data';
+} from '@ngrx/data';
 import { filter } from 'rxjs/operators';
 import { ToastService } from '../core/toast.service';
 
