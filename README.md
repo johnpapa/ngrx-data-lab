@@ -168,6 +168,7 @@ We need to listen for the stream of hereos. Set your new `heroes$` property to t
 ```typescript
 constructor(private heroService: HeroService) {
   this.heroes$ = heroService.entities$;
+  this.loading$ = heroService.loading$;
 }
 ```
 
