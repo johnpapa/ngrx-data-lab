@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { EntityDataModule } from '@ngrx/data';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EntityDataModule } from '@ngrx/data';
 import { environment } from '../../environments/environment';
 import { entityConfig } from './entity-metadata';
 import { NgrxDataToastService } from './ngrx-data-toast.service';
@@ -15,6 +15,6 @@ import { NgrxDataToastService } from './ngrx-data-toast.service';
     EntityDataModule.forRoot(entityConfig)
   ]
 })
-class AppStoreModule {
+export class AppStoreModule {
   constructor(toastService: NgrxDataToastService) {}
 }
