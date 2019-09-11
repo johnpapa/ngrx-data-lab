@@ -7,7 +7,7 @@ import { Hero } from '../core';
 
 @Injectable({ providedIn: 'root' })
 export class HeroService extends EntityCollectionServiceBase<Hero> {
-  constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
-    super('Hero', serviceElementsFactory);
+  constructor(factory: EntityCollectionServiceElementsFactory) {
+    super('Hero', factory);
   }
 }
