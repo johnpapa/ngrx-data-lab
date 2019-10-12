@@ -88,7 +88,7 @@ We need to add the entity configuration that we just created in the previous ste
 Add the following two lines of code to import the symbols into `app-store.module.ts`.
 
 ```typescript
-import { DefaultDataServiceConfig, NgrxDataModule } from 'ngrx-data';
+import { NgrxDataModule } from 'ngrx-data';
 import { entityConfig } from './entity-metadata';
 ```
 
