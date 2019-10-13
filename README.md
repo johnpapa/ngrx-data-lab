@@ -151,7 +151,7 @@ Open the `heroes.component.ts` file and modify the `heroes` array to be an `Obse
 heroes$: Observable<Hero[]>;
 ```
 
-Modify the `loading` proeprty to be an `Observable<boolean>`.
+Modify the `loading` property to be an `Observable<boolean>`.
 
 ```typescript
 loading$: Observable<boolean>;
