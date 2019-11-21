@@ -7,10 +7,12 @@ import { entityConfig } from './entity-metadata';
 import { EntityDataModule } from '@ngrx/data';
 import { NgrxDataToastService } from './ngrx-data-toast.service';
 
+import { VillainEffects } from './villains/villain-effects';
+
 @NgModule({
   imports: [
     StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([VillainEffects]),
     environment.production ? [] : StoreDevtoolsModule.instrument(),
     EntityDataModule.forRoot(entityConfig)
   ]

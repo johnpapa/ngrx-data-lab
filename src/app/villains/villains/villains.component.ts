@@ -48,6 +48,10 @@ export class VillainsComponent implements OnInit {
     this.selected = villain;
   }
 
+  toggleSuper(villain: Villain) {
+    this.villainService.setIsSuper(villain.id, !villain.isSuper);
+  }
+
   update(villain: Villain) {
     this.villainService.update(villain);
   }

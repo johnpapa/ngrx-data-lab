@@ -7,23 +7,79 @@
       <div class="editfields">
         <div [hidden]="addMode">
           <mat-form-field>
-            <input matInput formControlName="id" placeholder="id" #id readonly>
+            <input
+              matInput
+              formControlName="id"
+              placeholder="id"
+              #id
+              readonly
+            />
           </mat-form-field>
         </div>
         <div>
           <mat-form-field>
-            <input matInput formControlName="name" placeholder="name" #name (keyup.esc)="close()" (keyup.enter)="saveVillain(form)">
+            <input
+              matInput
+              formControlName="name"
+              placeholder="name"
+              #name
+              (keyup.esc)="close()"
+              (keyup.enter)="saveVillain(form)"
+            />
           </mat-form-field>
         </div>
         <div>
           <mat-form-field>
-            <textarea matInput formControlName="saying" placeholder="saying" #saying (keyup.esc)="close()"
-              (keyup.enter)="saveVillain(form)"></textarea>
+            <textarea
+              matInput
+              formControlName="saying"
+              placeholder="saying"
+              #saying
+              (keyup.esc)="close()"
+              (keyup.enter)="saveVillain(form)"
+            ></textarea>
+          </mat-form-field>
+        </div>
+        <div [hidden]="addMode">
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="isSuper"
+              placeholder="Is Super Villain"
+              #isSuper
+              readonly
+            />
           </mat-form-field>
         </div>
       </div>
-      <button mat-raised-button color="accent" type="button" (click)="close()" matTooltip="Cancel all changes">Cancel</button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="form.pristine || form.invalid" matTooltip="Save all changes">Save</button>
+      <button
+        mat-raised-button
+        color="accent"
+        type="button"
+        (click)="close()"
+        matTooltip="Cancel all changes"
+      >
+        Cancel
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form.pristine || form.invalid"
+        matTooltip="Save all changes"
+      >
+        Save
+      </button>
+      <button
+        mat-raised-button
+        color="secondary"
+        type="button"
+        [disabled]="addMode"
+        (click)="toggleIsSuper()"
+        matTooltip="Toggle is Super Villain"
+      >
+        Super
+      </button>
     </form>
   </mat-card-content>
 </mat-card>

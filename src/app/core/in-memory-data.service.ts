@@ -9,10 +9,17 @@ import {
   ParsedRequestUrl
 } from 'angular-in-memory-web-api';
 
+import {
+  createNoContentResponse$,
+  createNotFoundResponse$
+} from './in-mem-service-utils';
+
 import { Hero, Villain } from './model';
 
 /** In-memory database data */
 interface Db {
+  heroes?: Hero[];
+  villains?: Villain[];
   [collectionName: string]: any[];
 }
 
@@ -72,6 +79,28 @@ export class InMemoryDataService {
         : undefined;
     return parsed;
   }
+
+  // #region POST cases
+  /**
+   * Special-cases for POST methods
+   */
+  post(reqInfo: RequestInfo) {
+    // SetSuperVillain Customer API
+    if (reqInfo.collectionName === 'set-super-villain') {
+      const { id, isSuper } = (reqInfo.req as any).body;
+      const villain = this.db.villains.find(v => v.id === id);
+      if (villain) {
+        villain.isSuper = isSuper === true;
+        return createNoContentResponse$(reqInfo);
+      } else {
+        return createNotFoundResponse$(reqInfo);
+      }
+    } else {
+      // Let all other POST requests through
+      return null;
+    }
+  }
+  // #endregion POST cases
 }
 
 /**
@@ -124,7 +153,8 @@ function getDbData() {
     {
       id: 22,
       name: 'Agent Smith',
-      saying: 'Human beings are a disease.'
+      saying: 'Human beings are a disease.',
+      isSuper: true
     },
     {
       id: 23,
@@ -139,7 +169,7 @@ function getDbData() {
     {
       id: 25,
       name: 'West Witch',
-      saying: 'I\'ll get you, my pretty, and your little dog too!'
+      saying: "I'll get you, my pretty, and your little dog too!"
     },
     {
       id: 26,

@@ -23,6 +23,7 @@ export class VillainDetailComponent implements OnChanges {
   @Output() unselect = new EventEmitter<string>();
   @Output() add = new EventEmitter<Villain>();
   @Output() update = new EventEmitter<Villain>();
+  @Output() toggleSuper = new EventEmitter<Villain>();
 
   @ViewChild('name', { static: true }) nameElement: ElementRef;
 
@@ -31,15 +32,20 @@ export class VillainDetailComponent implements OnChanges {
   form = this.fb.group({
     id: [],
     name: ['', Validators.required],
-    saying: ['']
+    saying: [''],
+    isSuper: []
   });
 
   constructor(private fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges) {
+    let villain = this.villain;
     this.setFocus();
-    if (this.villain && this.villain.id) {
-      this.form.patchValue(this.villain);
+    if (villain && villain.id) {
+      if (villain.isSuper == null) {
+        villain = { ...villain, isSuper: false };
+      }
+      this.form.patchValue(villain);
       this.addMode = false;
     } else {
       this.form.reset();
@@ -69,6 +75,13 @@ export class VillainDetailComponent implements OnChanges {
 
   setFocus() {
     this.nameElement.nativeElement.focus();
+  }
+
+  toggleIsSuper() {
+    if (!this.addMode) {
+      this.toggleSuper.emit(this.villain);
+    }
+    this.close();
   }
 
   updateVillain(form: FormGroup) {

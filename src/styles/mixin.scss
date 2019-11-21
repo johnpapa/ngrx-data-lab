@@ -47,8 +47,13 @@
   .selected,
   .selected > .item-text * {
     background-color: rgb(0, 120, 215) !important;
-    color: white;
+    color: white !important;
   }
+  .super {
+    font-weight: bold;
+    color: red !important;
+  }
+
   li {
     cursor: pointer;
     position: relative;
